@@ -2,6 +2,7 @@
 
 #include <nlohmann/json.hpp>
 #include <inja/inja.hpp>
+#include <sqlite/sqlite3.h>
 
 static const char *html_template =
     "<html>\n"
@@ -27,5 +28,9 @@ int main(int argc, char *argv[]) {
     inja::Environment env;
     std::cout << env.render(html_template, my_json) << '\n';
 
+    sqlite3 *db = nullptr;
+    sqlite3_open_v2(":memory:", &db, 0, nullptr);
+
+    sqlite3_close_v2(db);
     return 0;
 }

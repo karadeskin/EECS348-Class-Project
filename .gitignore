@@ -30,6 +30,8 @@
 *.out
 *.app
 
+.vscode/
+
 # include premake5 binaries for building
 !/thirdparty/premake5/**
 
