@@ -37,4 +37,8 @@
 /bin
 /obj
 *.make
+*.xcodeproj
+*.xcworkspace
+*.sln
+*.vcxproj
 Makefile
