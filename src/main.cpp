@@ -3,6 +3,7 @@
 #include <nlohmann/json.hpp>
 #include <inja/inja.hpp>
 #include <sqlite/sqlite3.h>
+#include <httplib.h>
 
 static const char *html_template =
     "<html>\n"
@@ -32,5 +33,13 @@ int main(int argc, char *argv[]) {
     sqlite3_open_v2(":memory:", &db, 0, nullptr);
 
     sqlite3_close_v2(db);
+
+    httplib::Server svr;
+
+    svr.Get("/", [&](const httplib::Request&, httplib::Response &res) {
+        res.set_content(env.render(html_template, my_json), "text/html");
+    });
+
+    svr.listen("0.0.0.0", 3000);
     return 0;
 }

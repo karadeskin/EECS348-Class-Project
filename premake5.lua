@@ -7,7 +7,6 @@ workspace "CalculatorApp"
     }
 
 include "thirdparty/sqlite-3.43.1"
--- include "thirdparty/facil.io-0.7.6"
 
 project "CalculatorApp"
     kind "ConsoleApp"
@@ -22,10 +21,10 @@ project "CalculatorApp"
     }
 
     includedirs {
-        "./thirdparty/inja-3.4.0/",
-        "./thirdparty/nlohmann-3.11.2/single_include/",
-        "./thirdparty/sqlite-3.43.1/",
-        "./thirdparty/facil.io-0.7.6/"
+        "thirdparty/inja-3.4.0/",
+        "thirdparty/nlohmann-3.11.2/single_include/",
+        "thirdparty/sqlite-3.43.1/",
+        "thirdparty/cpp-httplib-0.14.1"
     }
 
     files {
