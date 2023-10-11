@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 
 #include <nlohmann/json.hpp>
 #include <inja/inja.hpp>
@@ -8,20 +9,24 @@
 static const char *html_template =
     "<html>\n"
     "<body>\n"
-    "    <h1>{{ text }}, the date is {{ date }}!</h1>\n"
+    "    <h1>{{ text }}<code>&#8212;</code>the date is {{ date }}!</h1>\n"
     "    <h2>my favorite animals:</h2>\n"
     "    <ul>\n"
-    "    {\% for animal in animals \%}\n"
+    "    {% for animal in animals %}\n"
     "        <li>{{ animal }}</li>\n"
-    "    {\% endfor \%}\n"
+    "    {% endfor %}\n"
     "    </ul>\n"
     "</body>\n"
     "</html>";
 
+void run_server(httplib::Server *server) {
+    server->listen("0.0.0.0", 3000);
+}
+
 int main(int argc, char *argv[]) {
     nlohmann::json my_json;
     my_json["text"] = "hello, world!";
-    my_json["date"] = "10-9-23";
+    my_json["date"] = "10-11-23";
     my_json["animals"] = {
         "cats", "dogs", "bats", "rats", "goats", "sheep"
     };
@@ -34,12 +39,20 @@ int main(int argc, char *argv[]) {
 
     sqlite3_close_v2(db);
 
-    httplib::Server svr;
+    httplib::Server server;
 
-    svr.Get("/", [&](const httplib::Request&, httplib::Response &res) {
+    server.Get("/", [&](const httplib::Request &req, httplib::Response &res) {
         res.set_content(env.render(html_template, my_json), "text/html");
     });
 
-    svr.listen("0.0.0.0", 3000);
+    // listen blocks so spawn a thread just for the server
+    std::thread(run_server, &server).detach();
+
+    // we don't do anything else so just sleep
+    using namespace std::chrono_literals;
+    for (;;) {
+        std::this_thread::sleep_for(1s);
+    }
+
     return 0;
 }
