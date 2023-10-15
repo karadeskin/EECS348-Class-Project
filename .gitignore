@@ -40,5 +40,7 @@
 *.xcodeproj
 *.xcworkspace
 *.sln
-*.vcxproj
+*.vcxproj*
 Makefile
+
+.vs
