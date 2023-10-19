@@ -8,7 +8,7 @@ workspace "CalculatorApp"
 
 include "thirdparty/sqlite-3.43.1"
 
-project "CalculatorApp"
+project "Calculator"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
@@ -28,8 +28,40 @@ project "CalculatorApp"
     }
 
     files {
-        "**.cpp",
-        "**.h"
+        "calculator/calculator.cpp",
+        "include/**.h"
+    }
+
+    filter "configurations:Debug*"
+        defines { "DEBUG" }
+        symbols "On"
+
+    filter "configurations:Release*"
+        optimize "On"
+
+
+project "Website"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+
+    targetdir "bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+    objdir "obj/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+    
+    links {
+        "sqlite"
+    }
+
+    includedirs {
+        "thirdparty/inja-3.4.0/",
+        "thirdparty/nlohmann-3.11.2/single_include/",
+        "thirdparty/sqlite-3.43.1/",
+        "thirdparty/cpp-httplib-0.14.1"
+    }
+
+    files {
+        "website/main.cpp",
+        "include/**.h"
     }
 
     filter "configurations:Debug*"
