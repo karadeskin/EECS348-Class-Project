@@ -28,7 +28,8 @@ project "Calculator"
     }
 
     files {
-        "calculator/calculator.cpp",
+        "calculator/**.cpp",
+        "calculator/**.h",
         "include/**.h"
     }
 
@@ -60,7 +61,8 @@ project "Website"
     }
 
     files {
-        "website/main.cpp",
+        "website/**.cpp",
+        "website/**.h",
         "include/**.h"
     }
 
