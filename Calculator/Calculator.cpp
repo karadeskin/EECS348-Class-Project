@@ -28,10 +28,15 @@ vector<string> str_to_strvec(string &equ_str) {
 
         if (char_is_num(equ_str[i])) {                          //Check if the character in equ_str at index i is a number.
             if (i == 0) {                                       //If so, if it is the first character in the string,
-                num_str = character;                            //or if it is the preceding character is not a number,
-            }                                                   //then it is the first character of a number-string,
-            else if (char_is_num(equ_str[i - 1]) == false) {    //and num_str is set equal to character, the string version of the character
-                num_str = character;
+                num_str = character;                            //set num_str equal to character
+            }                                                   
+            else if (char_is_num(equ_str[i - 1]) == false) {    //If the character is not proceded by a number,
+                if (equ_str[i - 1] == '-') {                    //check if it is proceded by a negative sign
+                    num_str.append(character);                  //If so, append the string version to the end of the num_str string.
+                }
+                else {                                          //If not, character is the first character in a number string,
+                    num_str = character;                        //set num_str equal to character
+                }
             }
             else {                                              //If the character is not the first character of a number-string, but is a number,
                 num_str.append(character);                      //append the string version to the end of the num_str string.
@@ -44,6 +49,7 @@ vector<string> str_to_strvec(string &equ_str) {
                 equ_vec.push_back(num_str);
             }                                                   //If not, nothing is done.
         }
+
         else if (character == "+") {                            //If the current character is a +,
             if (i == 0 || i == (equ_str.length() - 1)) {        //If '+' is the first or last charcter, throw an error
                 throw(runtime_error("Plus operator is missing an operand."));
@@ -51,12 +57,16 @@ vector<string> str_to_strvec(string &equ_str) {
             else if (char_is_num(equ_str[i - 1]) == true && char_is_num(equ_str[i + 1]) == true) { //'+' is preceded and followed by a number
                 equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
             }
+            else if (char_is_num(equ_str[i - 1]) == true && equ_str[i + 1] == '-') { //'+' is preceded by a number and followed by a negative sign
+                equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+            }
             else {                                              //'+' not preceded and followed by a number,
                 throw(runtime_error("Plus operator is missing an operand."));   //throw an error
 
             }
         }
-        /*  CODE FOR HANDLING '+' CHARACTER WITH WHITESPACE - UNCOMMENT IF INPUT STRING CAN CONTAIN WHITESPACE - NEEDS TESTING
+
+        /*  CODE FOR HANDLING '+' CHARACTER WITH WHITESPACE - UNCOMMENT IF INPUT STRING CAN CONTAIN WHITESPACE - NEEDS TESTING - REPLACE ABOVE '+' ELSE IF BLOCK
         else if (character == "+") {                            //If the current character is a +,
             if (i == 0 || i == (equ_str.length() - 1)) {        //If '+' is the first or last charcter, throw an error
                 throw(runtime_error("Plus operator is missing an operand."));
@@ -108,10 +118,48 @@ vector<string> str_to_strvec(string &equ_str) {
             }
         }
         */
+
+        else if (character == "-") {                            //Current character is a -
+            if (i == 0) {                                       //Character is first in string so character is a negative sign
+                if (i == equ_str.length() - 1) {                //Character is at end of string
+                    throw(runtime_error("Negative sign is missing number."));    //Throw error
+                }
+                else if (char_is_num(equ_str[i + 1]) == true) { //Following character is a number
+                    num_str = character;                        //set num_str equal to the character
+                }
+                else {                                          //Negative sign not followed by number
+                    throw(runtime_error("Negative sign is missing number."));    //Throw error
+                }
+            }
+            else if (char_is_num(equ_str[i - 1]) == false) {    //Proceding character is not a number so character is a negative sign
+                if (i == equ_str.length() - 1) {                //Character is at end of string
+                    throw(runtime_error("Negative sign is missing number."));    //Throw error
+                }
+                else if (char_is_num(equ_str[i + 1]) == true) { //Following character is a number
+                    num_str = character;                        //set num_str equal to the character
+                }
+                else {                                          //Negative sign not followed by number
+                    throw(runtime_error("Negative sign is missing number."));    //Throw error
+                }
+            }
+            else if (i != equ_str.length() - 1) {               //Character is a minus operator, that is not the last character in the string
+                if (char_is_num(equ_str[i + 1]) == true || equ_str[i+1] == '-') {      //Following character is a number or negative sign
+                    equ_vec.push_back(character);               //add the string version to the end of equ_vec.
+                }
+                else {
+                    throw(runtime_error("Minus operator is missing an operand."));    //Throw error
+                }
+            }
+            else {
+                throw(runtime_error("Minus operator is missing an operand."));    //Throw error
+            }
+        }
+
         /*  CODE FOR HANDLING SPACES IN INPUT STRING - UNCOMMENT IF INPUT STRING CAN CONTAIN SPACES
         else if (character == " ") {                            //Ignore empty 'whitespace' characters of a single space.
         }
         */
+
         else {                                                  //If an unrecognized character is detected, print error message and abort loop
             throw(runtime_error("Unrecognized character in input."));   //If character not coded for, throw error
         }
@@ -128,6 +176,15 @@ void add_sub_calc(vector<string> &equ_vec) {
             if (equ_vec[i] == "+") {               //If the entry at current index is a +,
                 found_operator = true;      //Update operator tracker
                 result = stoi(equ_vec[(i - 1)]) + stoi(equ_vec[(i + 1)]);     //Convert the entries on either side of the operator to strings, and perform the operation
+                equ_vec.erase(equ_vec.begin() + (i - 1));           //Remove the left operand from the equation vector
+                equ_vec.erase(equ_vec.begin() + (i - 1));           //Remove the operator from the equation vector
+                equ_vec.erase(equ_vec.begin() + (i - 1));           //Remove the right operand from the equation vector
+                equ_vec.insert(equ_vec.begin() + (i - 1), to_string(result));  //Convert the result to a string, and insert it where the left operand was
+                break;      //End the for loop, so we can restart the iteration from the left side
+            }
+            else if (equ_vec[i] == "-") {               //If the entry at current index is a -,
+                found_operator = true;      //Update operator tracker
+                result = stoi(equ_vec[(i - 1)]) - stoi(equ_vec[(i + 1)]);     //Convert the entries on either side of the operator to strings, and perform the operation
                 equ_vec.erase(equ_vec.begin() + (i - 1));           //Remove the left operand from the equation vector
                 equ_vec.erase(equ_vec.begin() + (i - 1));           //Remove the operator from the equation vector
                 equ_vec.erase(equ_vec.begin() + (i - 1));           //Remove the right operand from the equation vector
