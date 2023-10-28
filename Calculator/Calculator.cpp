@@ -27,46 +27,30 @@ vector<string> str_to_strvec(string &equ_str) {
         string character = { equ_str[i] };               //Define character variable as a string, and assign the string conversion of the entry of equ_str at index i
 
         if (char_is_num(equ_str[i])) {                          //Check if the character in equ_str at index i is a number.
-            if (i == 0) {                                       //If so, if it is the first character in the string,
-                num_str = character;                            //set num_str equal to character
-            }                                                   
-            else if (char_is_num(equ_str[i - 1]) == false) {    //If the character is not proceded by a number,
-                if (equ_str[i - 1] == '-') {                    //check if it is proceded by a negative sign
-                    num_str.append(character);                  //If so, append the string version to the end of the num_str string.
-                }
-                else {                                          //If not, character is the first character in a number string,
-                    num_str = character;                        //set num_str equal to character
-                }
-            }
-            else {                                              //If the character is not the first character of a number-string, but is a number,
-                num_str.append(character);                      //append the string version to the end of the num_str string.
-            }
+            num_str.append(character);
 
             if (i == (equ_str.length() - 1)) {                  //If i is at the end of the vector,
-                equ_vec.push_back(num_str);                     //or the next character is not a number,
-            }                                                   //the current character is the last character in its number-string.
-            else if (char_is_num(equ_str[i + 1]) == false) {    //So, num_str is added to the end of the equ_vec vector
-                equ_vec.push_back(num_str);
-            }                                                   //If not, nothing is done.
-        }
-
-        else if (character == "+") {                            //If the current character is a +,
-            if (i == 0 || i == (equ_str.length() - 1)) {        //If '+' is the first or last charcter, throw an error
-                throw(runtime_error("Plus operator is missing an operand."));
+                equ_vec.push_back(num_str);                     //add num_str to equ_vec
+                num_str = "";                                   //Reset num_str
             }
-            else if (char_is_num(equ_str[i - 1]) == true && char_is_num(equ_str[i + 1]) == true) { //'+' is preceded and followed by a number
-                equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
-            }
-            else if (char_is_num(equ_str[i - 1]) == true && equ_str[i + 1] == '-') { //'+' is preceded by a number and followed by a negative sign
-                equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
-            }
-            else {                                              //'+' not preceded and followed by a number,
-                throw(runtime_error("Plus operator is missing an operand."));   //throw an error
-
+            else if (char_is_num(equ_str[i + 1]) == false) {    //If it is not followed by a number
+                if (equ_str[i + 1] == ' ') {                    //Characer is followed by a space
+                    if (i + 1 == equ_str.length() - 1) {        //Space is the last character
+                        equ_vec.push_back(num_str);                     //add num_str to equ_vec
+                        num_str = "";                            //Reset num_str
+                    }
+                    else if (char_is_num(equ_str[i + 2]) == false) {    //Character is followed by a space, then not a number
+                        equ_vec.push_back(num_str);                     //add num_str to equ_vec
+                        num_str = "";                           //Reset num_str
+                    }
+                }
+                else {                                          //Character is not followed by number or space
+                    equ_vec.push_back(num_str);                     //add num_str to equ_vec
+                    num_str = "";                           //Reset num_str
+                }
             }
         }
 
-        /*  CODE FOR HANDLING '+' CHARACTER WITH WHITESPACE - UNCOMMENT IF INPUT STRING CAN CONTAIN WHITESPACE - NEEDS TESTING - REPLACE ABOVE '+' ELSE IF BLOCK
         else if (character == "+") {                            //If the current character is a +,
             if (i == 0 || i == (equ_str.length() - 1)) {        //If '+' is the first or last charcter, throw an error
                 throw(runtime_error("Plus operator is missing an operand."));
@@ -88,8 +72,14 @@ vector<string> str_to_strvec(string &equ_str) {
                 }
             }
             else if (char_is_num(equ_str[i - 1]) == true && char_is_num(equ_str[i + 1]) == false) { //'+' is preceded by a number, but not followed
-                if (i+2 <= equ_str.length() - 1) {                                   //If '+' is followed by at least two characters
+                if (i + 2 <= equ_str.length() - 1) {                                   //If '+' is followed by at least two characters
                     if (equ_str[i + 1] == ' ' && char_is_num(equ_str[i + 2]) == true) { //'+' is followed by a space and the character after that is a number
+                        equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                    }
+                    else if (equ_str[i + 1] == ' ' && equ_str[i + 2] == '-') {      //'+' is followed by a space and a negative
+                        equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                    }
+                    else if (equ_str[i + 1] == '-') {                   //'+' is followed by a negative
                         equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
                     }
                     else {                                      //'+' is not followed by number, space
@@ -105,6 +95,12 @@ vector<string> str_to_strvec(string &equ_str) {
                     if ((equ_str[i - 1] == ' ' && char_is_num(equ_str[i - 2]) == true) && (equ_str[i + 1] == ' ' && char_is_num(equ_str[i + 2]) == true)) { //'+' is preceded and followed by a space and the characters before/after those are numbers
                         equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
                     }
+                    else if ((equ_str[i - 1] == ' ' && char_is_num(equ_str[i - 2]) == true) && (equ_str[i + 1] == ' ' && equ_str[i + 2] == '-')) { //'+' is preceded preceded by a number and a space, and followed by a space and a negative
+                        equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                    }
+                    else if ((equ_str[i - 1] == ' ' && char_is_num(equ_str[i - 2]) == true) && equ_str[i + 1] == '-') { //'+' is preceded preceded by a number and a space, and followed by a negative
+                        equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                    }
                     else {                                      //'+' is not followed by number, space
                         throw(runtime_error("Plus operator is missing an operand."));   //Throw error
                     }
@@ -117,7 +113,7 @@ vector<string> str_to_strvec(string &equ_str) {
                 throw(runtime_error("Plus operator is missing an operand."));   //Throw error
             }
         }
-        */
+        
 
         else if (character == "-") {                            //Current character is a -
             if (i == 0) {                                       //Character is first in string so character is a negative sign
@@ -127,40 +123,176 @@ vector<string> str_to_strvec(string &equ_str) {
                 else if (char_is_num(equ_str[i + 1]) == true) { //Following character is a number
                     num_str = character;                        //set num_str equal to the character
                 }
-                else {                                          //Negative sign not followed by number
-                    throw(runtime_error("Negative sign is missing number."));    //Throw error
-                }
-            }
-            else if (char_is_num(equ_str[i - 1]) == false) {    //Proceding character is not a number so character is a negative sign
-                if (i == equ_str.length() - 1) {                //Character is at end of string
-                    throw(runtime_error("Negative sign is missing number."));    //Throw error
-                }
-                else if (char_is_num(equ_str[i + 1]) == true) { //Following character is a number
-                    num_str = character;                        //set num_str equal to the character
+                else if (i + 2 <= equ_str.length() - 1) {       //Character is followed by at least two characters
+                    if (equ_str[i + 1] == ' ' && char_is_num(equ_str[i + 2])) {  //Character is followed by a space then a number
+                        num_str = character;                        //set num_str equal to the character
+                    }
+                    else {                                      //Negative sign is not followed by a space then a number
+                        throw(runtime_error("Negative sign is missing number."));    //Throw error
+                    }
                 }
                 else {                                          //Negative sign not followed by number
                     throw(runtime_error("Negative sign is missing number."));    //Throw error
                 }
             }
-            else if (i != equ_str.length() - 1) {               //Character is a minus operator, that is not the last character in the string
-                if (char_is_num(equ_str[i + 1]) == true || equ_str[i+1] == '-') {      //Following character is a number or negative sign
-                    equ_vec.push_back(character);               //add the string version to the end of equ_vec.
+            else if (i == 1) {                                  //Character is second in string
+                if (equ_str[i - 1] == ' ') {                    //Preceding character is a space
+                    if (i == equ_str.length() - 1) {                //Character is at end of string
+                        throw(runtime_error("Negative sign is missing number."));    //Throw error
+                    }
+                    else if (char_is_num(equ_str[i + 1]) == true) { //Following character is a number
+                        num_str = character;                        //set num_str equal to the character
+                    }
+                    else if (i + 2 <= equ_str.length() - 1) {       //Character is followed by at least two characters
+                        if (equ_str[i + 1] == ' ' && char_is_num(equ_str[i + 2])) {  //Character is followed by a space then a number
+                            num_str = character;                        //set num_str equal to the character
+                        }
+                        else {                                      //Negative sign is not followed by a space then a number
+                            throw(runtime_error("Negative sign is missing number."));    //Throw error
+                        }
+                    }
+                    else {                                          //Negative sign not followed by number
+                        throw(runtime_error("Negative sign is missing number."));    //Throw error
+                    }
                 }
-                else {
-                    throw(runtime_error("Minus operator is missing an operand."));    //Throw error
+                else if (char_is_num(equ_str[i - 1]) == true) {     //Preceding character is a number, character is a minus sign
+                    if (i == equ_str.length() - 1) {                //Character is last character
+                        throw(runtime_error("Minus operator is missing an operand."));   //Throw error
+                    }
+                    else if (i + 1 == equ_str.length() - 1) {       //Character is followed by one character
+                        if (char_is_num(equ_str[i + 1]) == true) {  //Character is followed by a number
+                            equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                        }
+                        else {                                      //Character is not followed by a number
+                            throw(runtime_error("Minus operator is missing an operand.")); //Throw error
+                        }
+                    }
+                    else if (i + 2 <= equ_str.length() - 1) {       //Character is followed by at least two characters
+                        if (equ_str[i + 1] == ' ' && char_is_num(equ_str[i + 2])) {  //Character is followed by a space then a number
+                            equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                        }
+                        else {                                      //Minus sign is not followed by a space then a number
+                            throw(runtime_error("Minus operator is missing an operand."));    //Throw error
+                        }
+                    }
+                    else {                                          //Character is not preceded by a space or a number
+                        throw(runtime_error("Minus operator is missing an operand,"));   //Throw error
+                    }
+                }
+                else {                                              //Preceding character is not a space or number
+                    throw(runtime_error("Missing operand."));        //Throw error
                 }
             }
-            else {
-                throw(runtime_error("Minus operator is missing an operand."));    //Throw error
+            else if (char_is_num(equ_str[i - 1]) == false) {    //Preceding character is not a number
+                if (equ_str[i - 1] == ' ')  {   //Character is preceded by a space
+                    if (char_is_num(equ_str[i - 2]) == true) {      //The preceding space is preceded by a number
+                        if (i == equ_str.length() - 1) {                //Character is last character
+                            throw(runtime_error("Minus operator is missing an operand."));   //Throw error
+                        }
+                        else if (i + 1 == equ_str.length() - 1) {       //Character is followed by one character
+                            if (char_is_num(equ_str[i + 1]) == true) {  //Character is followed by a number
+                                equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                            }
+                            else {                                      //Character is not followed by a number
+                                throw(runtime_error("Minus operator is missing an operand.")); //Throw error
+                            }
+                        }
+                        else if (i + 2 <= equ_str.length() - 1) {       //Character is followed by at least two characters
+                            if (equ_str[i + 1] == ' ' && char_is_num(equ_str[i + 2])) {  //Character is followed by a space then a number
+                                equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                            }
+                            else {                                      //Minus sign is not followed by a space then a number
+                                throw(runtime_error("Minus operator is missing an operand."));    //Throw error
+                            }
+                        }
+                        else {                                          //Character is not preceded by a space or a number
+                            throw(runtime_error("Minus operator is missing an operand,"));   //Throw error
+                        }
+                    }
+                    else {                                              //The preceding space is not preceded by a number, character is a negative sign
+                        if (i == equ_str.length() - 1) {                //Character is at end of string
+                            throw(runtime_error("Negative sign is missing number."));    //Throw error
+                        }
+                        else if (i + 1 == equ_str.length() - 1) {       //Character is followed by one character
+                            if (char_is_num(equ_str[i + 1]) == true) { //Following character is a number
+                                num_str = character;                        //set num_str equal to the character
+                            }
+                            else {                                      //Following character is not a number
+                                throw(runtime_error("Minus operator is missing an operand,"));   //Throw error
+                            }
+                        }
+                        else if (char_is_num(equ_str[i + 1]) == true) { //Following character is a number
+                            num_str = character;                        //set num_str equal to the character
+                        }
+                        else if (equ_str[i + 1] == ' ' && char_is_num(equ_str[i + 2])) {    //Character is followed by a space and a number
+                            num_str = character;                        //set num_str equal to the character
+                        }
+                        else {                                          //Negative sign not followed by number
+                            throw(runtime_error("Negative sign is missing number."));    //Throw error
+                        }
+                    }
+                }
+                else {                                          //Preceding character is not a number or space, character is a negative sign
+                    if (i == equ_str.length() - 1) {                //Character is at end of string
+                        throw(runtime_error("Negative sign is missing number."));    //Throw error
+                    }
+                    else if (i + 1 == equ_str.length() - 1) {       //Character is followed by one character
+                        if (char_is_num(equ_str[i + 1]) == true) { //Following character is a number
+                            num_str = character;                        //set num_str equal to the character
+                        }
+                        else {                                      //Following character is not a number
+                            throw(runtime_error("Minus operator is missing an operand,"));   //Throw error
+                        }
+                    }
+                    else if (char_is_num(equ_str[i + 1]) == true) { //Following character is a number
+                        num_str = character;                        //set num_str equal to the character
+                    }
+                    else if (equ_str[i + 1] == ' ' && char_is_num(equ_str[i + 2])) {    //Character is followed by a space and a number
+                        num_str = character;                        //set num_str equal to the character
+                    }
+                    else {                                          //Negative sign not followed by number
+                        throw(runtime_error("Negative sign is missing number."));    //Throw error
+                    }
+                }
+            }
+            else {                                                  //Character is not first or second character, and is preceded by a number
+                if (i == equ_str.length() - 1) {                //Character is last character
+                    throw(runtime_error("Minus operator is missing an operand."));   //Throw error
+                }
+                else if (i + 1 == equ_str.length() - 1) {       //Character is followed by one character
+                    if (char_is_num(equ_str[i + 1]) == true) {  //Character is followed by a number
+                        equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                    }
+                    else {                                      //Character is not followed by a number
+                        throw(runtime_error("Minus operator is missing an operand.")); //Throw error
+                    }
+                }
+                else {                                          //Character is followed by at least two characters
+                    if (char_is_num(equ_str[i + 1]) == true) {  //Character is followed by a number
+                        equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                    }
+                    else if (equ_str[i + 1] = ' ' && char_is_num(equ_str[i + 2]) == true) { //Character is followed by a space and a number
+                        equ_vec.push_back(character);                   //add the string version to the end of equ_vec.
+                    }
+                    else {                                      //Character is not followed by number or space and number
+                        throw(runtime_error("Minus operator is missing an operand.")); //Throw error
+                    }
+                }
             }
         }
 
-        /*  CODE FOR HANDLING SPACES IN INPUT STRING - UNCOMMENT IF INPUT STRING CAN CONTAIN SPACES
         else if (character == " ") {                            //Ignore empty 'whitespace' characters of a single space.
+            if (i == 0 || i == (equ_str.length() - 1)) {        //If space is the first or last charcter, do nothing
+
+            }
+            else if (char_is_num(equ_str[i - 1]) == true && char_is_num(equ_str[i + 1]) == true) {  //If space is preceded and followed by numbers
+                throw(runtime_error("Missing operand."));                //Throw error
+            }
         }
-        */
+        
 
         else {                                                  //If an unrecognized character is detected, print error message and abort loop
+            cout << character << '\n';
             throw(runtime_error("Unrecognized character in input."));   //If character not coded for, throw error
         }
     }
@@ -200,12 +332,11 @@ int main() {
 
     string equ_str;                    //Initialize equation variables, and take input of equation
     cout << "Enter equation: ";
-    cin >> equ_str;
+    getline(cin, equ_str);
     vector<string> equ_vec;
 
     try {
         equ_vec = str_to_strvec(equ_str);       //Call function to convert string to vector, assign result to equ_vec
-
         vec_print<string>(equ_vec);             //Print equation vector for verification purposes - remove before final submission
         cout << "\n\n";
 
@@ -223,8 +354,9 @@ int main() {
 }
 
 /*
-Notes:  Tried to implement whitespace complient code
-        cin ends input string when it finds a space
-        Can't currently test whitespace code,
-        code commented out and left in place
+Notes:  I think whitespace code is implemented, but it needs more testing.
+        Input in the form of -a- b, where a and b are numbers,
+        causes issues because the space turns into a smiley-face character.
+        As best as I can tell, this happens when the input string is passed to the calculator function.
+        If I disable the throw command for unrecognized characters, everything works fine for that input.
 */
