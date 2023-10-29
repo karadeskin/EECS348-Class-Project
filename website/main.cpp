@@ -6,6 +6,8 @@
 #include <sqlite/sqlite3.h>
 #include <httplib.h>
 
+#include "dao.h"
+
 static const char *html_template =
     "<html>\n"
     "<body>\n"
@@ -19,39 +21,55 @@ static const char *html_template =
     "</body>\n"
     "</html>";
 
-void run_server(httplib::Server *server) {
-    server->listen("0.0.0.0", 3000);
+class App {
+private:
+    nlohmann::json _config {};
+    std::unique_ptr<DatabaseAccessObject> _dao {};
+    httplib::Server _server {};
+    inja::Environment _inja {};
+
+    void run_server() {
+        _server.listen("0.0.0.0", _config["port"]);
+    }
+public:
+    App(const nlohmann::json &config) :_config(config) {
+        _dao = std::make_unique<SqliteDAO>(_config["db"], _config["schema"]);
+
+        _server.Get("/", [&](const httplib::Request &req, httplib::Response &res) {
+            res.set_content(_inja.render(html_template, _config["example"]), "text/html");
+        });
+    }
+
+    void run() {
+        // std::thread(&App::run_server, this).detach();
+        _server.listen("0.0.0.0", _config["port"]);
+    }
+};
+
+nlohmann::json read_config(const std::string &path) {
+    std::ifstream f(path);
+
+    if (!f.is_open()) {
+        throw std::runtime_error(std::string { "Failed to open " + path });
+    }
+
+    return nlohmann::json::parse(f);
 }
 
 int main(int argc, char *argv[]) {
-    nlohmann::json my_json;
-    my_json["text"] = "hello, world!";
-    my_json["date"] = "10-11-23";
-    my_json["animals"] = {
-        "cats", "dogs", "bats", "rats", "goats", "sheep"
-    };
+    try {
+        nlohmann::json config;
 
-    inja::Environment env;
-    std::cout << env.render(html_template, my_json) << '\n';
+        if (argc == 2) {
+            config = read_config(argv[1]);
+        } else {
+            config = read_config("server_config.json");
+        }
 
-    sqlite3 *db = nullptr;
-    sqlite3_open_v2(":memory:", &db, 0, nullptr);
-
-    sqlite3_close_v2(db);
-
-    httplib::Server server;
-
-    server.Get("/", [&](const httplib::Request &req, httplib::Response &res) {
-        res.set_content(env.render(html_template, my_json), "text/html");
-    });
-
-    // listen blocks so spawn a thread just for the server
-    std::thread(run_server, &server).detach();
-
-    // we don't do anything else so just sleep
-    using namespace std::chrono_literals;
-    for (;;) {
-        std::this_thread::sleep_for(1s);
+        auto app = App(config);
+        app.run();
+    } catch (std::exception e) {
+        std::cerr << e.what() << '\n';
     }
 
     return 0;
