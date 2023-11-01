@@ -6,7 +6,7 @@
 #include <sqlite/sqlite3.h>
 #include <httplib.h>
 
-#include "dao.h"
+#include "sql_dao.h"
 
 static const char *html_template =
     "<html>\n"
@@ -27,22 +27,22 @@ private:
     std::unique_ptr<DatabaseAccessObject> _dao {};
     httplib::Server _server {};
     inja::Environment _inja {};
-
-    void run_server() {
-        _server.listen("0.0.0.0", _config["port"]);
-    }
 public:
-    App(const nlohmann::json &config) :_config(config) {
-        _dao = std::make_unique<SqliteDAO>(_config["db"], _config["schema"]);
-
+    App(const nlohmann::json &config, std::unique_ptr<DatabaseAccessObject> &&dao) : _config(config), _dao(std::move(dao)) {
         _server.Get("/", [&](const httplib::Request &req, httplib::Response &res) {
             res.set_content(_inja.render(html_template, _config["example"]), "text/html");
         });
     }
 
+    // listen for connections and respond.
+    // caution: this blocks the thread it's called on
     void run() {
-        // std::thread(&App::run_server, this).detach();
         _server.listen("0.0.0.0", _config["port"]);
+    }
+
+    // listen in a separate thread as not to block the main thread
+    void run_detach() {
+        std::thread(&App::run, this).detach();
     }
 };
 
@@ -58,6 +58,7 @@ nlohmann::json read_config(const std::string &path) {
 
 int main(int argc, char *argv[]) {
     try {
+        // read in our config file
         nlohmann::json config;
 
         if (argc == 2) {
@@ -66,9 +67,16 @@ int main(int argc, char *argv[]) {
             config = read_config("server_config.json");
         }
 
-        auto app = App(config);
+        // set up the SQLite DAO
+        std::ifstream schema(config["schema"].get<std::string>());
+        auto sql_dao = std::make_unique<SqliteDAO>();
+        sql_dao->attach(config["db"]);
+        sql_dao->run_schema(schema);
+
+        // begin running the app
+        auto app = App(config, std::move(sql_dao));
         app.run();
-    } catch (std::exception e) {
+    } catch (std::exception &e) {
         std::cerr << e.what() << '\n';
     }
 

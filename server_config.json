@@ -4,7 +4,7 @@
     "db": "website/db/calc.sqlite3",
     "example" : {
         "text": "hello, world",
-        "date": "October 24th",
+        "date": "November 1st",
         "animals": ["dogs", "just dogs", "dogs", "not any other animal", "not even cats", "only dogs"]
     }
 }
