@@ -17,7 +17,7 @@ jobs:
             premake: ./linux-build.sh
             build: make
           - os: macos-latest
-            premake: ./macos-build.bat
+            premake: ./macos-build.sh
             build: make
 
     runs-on: ${{ matrix.os }}
