@@ -20,6 +20,14 @@ project "Calculator"
         "sqlite"
     }
 
+    filter "system:Linux"
+        links {
+            "pthread",
+            "dl"
+        }
+
+    filter {}
+
     includedirs {
         "thirdparty/inja-3.4.0/",
         "thirdparty/nlohmann-3.11.2/single_include/",
@@ -52,6 +60,15 @@ project "Website"
     links {
         "sqlite"
     }
+
+    filter "system:Linux"
+        links {
+            "pthread",
+            "dl"
+        }
+
+    filter {}
+
 
     includedirs {
         "thirdparty/inja-3.4.0/",
