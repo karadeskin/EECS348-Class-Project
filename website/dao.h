@@ -2,6 +2,7 @@
 #define __CALC_DAO_H__
 
 #include <fstream>
+#include <iostream>
 #include <memory>
 #include <streambuf>
 #include <string>
@@ -24,13 +25,13 @@ class SqliteDAO : public DatabaseAccessObject {
 private:
     std::unique_ptr<sqlite3, SQLDestructor> _db {};
 
-    sqlite3 *open_sqlite3_db(const std::string_view db_path) noexcept {
+    sqlite3* open_sqlite3_db(const std::string &db_path) noexcept {
         sqlite3 *db;
-        sqlite3_open_v2(db_path.cbegin(), &db, 0, nullptr);
+        sqlite3_open_v2(db_path.c_str(), &db, 0, nullptr);
         return db;
     }
 
-    std::string read_file(const std::string_view path) {
+    std::string read_file(const std::string &path) {
         std::ifstream t(path);
         if (t.is_open()) {
             std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
