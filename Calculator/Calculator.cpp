@@ -131,7 +131,7 @@ void add_sub_calc(vector<string> &equ_vec) {
                                         //Otherwise, there are no more operators in the equation, found_operator remains false, loop ends
 }
 
-void mult_div_mod_calc(vector<string>& equ_vec) {
+void mult_div_mod_calc(vector<string> &equ_vec) {
     bool found_operator = false;            //Variable to track if we completed a pass through the equation without finding an operator
     do {
         found_operator = false;             //Reset found operator tracker to false
@@ -164,7 +164,7 @@ void mult_div_mod_calc(vector<string>& equ_vec) {
     add_sub_calc(equ_vec);              //Call addition and subtraction function
 }
 
-void exp_calc(vector<string>& equ_vec) {
+void exp_calc(vector<string> &equ_vec) {
     bool found_operator = false;            //Variable to track if we completed a pass through the equation without finding an operator
     do {
         found_operator = false;             //Reset found operator tracker to false
@@ -234,6 +234,4 @@ Notes:  Need help figuring out string formatting so character variable can be in
         Implement function to call from calculator functions to process negatives - 
         if operator is followed by negative, call process_negative
         process_negative replaces negative and number entries with a negative number entry
-
-        Related to that - how does a function call another function? I think I'm having scope issues.
 */
