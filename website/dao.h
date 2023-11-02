@@ -8,15 +8,18 @@
 #include <string>
 #include <string_view>
 
-#include <sqlite/sqlite3.h>
-
-#include "sql_interface.h"
-#include "sql_errors.h"
+#include "user.h"
 
 class DatabaseAccessObject {
 public:
     DatabaseAccessObject() {}
     virtual ~DatabaseAccessObject() noexcept {}
+
+    // some example functions
+    virtual User get_user(int id) = 0;
+    virtual User create_user(const std::string &name, const std::string &password) = 0;
+    virtual User update_user(int id) = 0;
+    virtual void delete_user(int id) = 0;
 };
 
 #endif // __CALC_DAO_H__

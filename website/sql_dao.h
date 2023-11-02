@@ -5,6 +5,7 @@
 #include <memory>
 #include <sqlite/sqlite3.h>
 
+#include "user.h"
 #include "sql_interface.h"
 #include "sql_errors.h"
 #include "dao.h"
@@ -49,6 +50,32 @@ public:
                 sqlite3_free(error);
             }
         }
+    }
+
+    // TODO not implemented
+    virtual User get_user(int id) override {
+        User user;
+
+        return user;
+    };
+
+    // TODO not implemented
+    virtual User create_user(const std::string &name, const std::string &password) override {
+        User user;
+
+        return user;
+    };
+
+    // TODO not implemented
+    virtual User update_user(int id) override {
+        User user;
+
+        return user;
+    }
+
+    // TODO not implemented
+    virtual void delete_user(int id) override {
+
     }
 
     ~SqliteDAO() noexcept {}
