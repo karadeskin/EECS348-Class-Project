@@ -106,15 +106,23 @@ void replace_sub_equ(vector<string> &equ_vec, int first_index, int length, int r
     equ_vec.insert(equ_vec.begin() + first_index, to_string(result));  //Convert the result to a string, and insert it where the left operand was
 }
 
-void exp_calc(vector<string> &equ_vec) {
+
+
+void add_sub_calc(vector<string> &equ_vec) {
     bool found_operator = false;            //Variable to track if we completed a pass through the equation without finding an operator
     do {
         found_operator = false;             //Reset found operator tracker to false
         int result;                         //Variable to store the result
         for (int i = 0; i < equ_vec.size(); i++) {   //Iterate over indices in equ_vec
-            if (equ_vec[i] == "^") {               //If the entry at current index is a ^,
+            if (equ_vec[i] == "+") {               //If the entry at current index is a +,
                 found_operator = true;      //Update operator tracker
-                result = pow(stoi(equ_vec[(i - 1)]), stoi(equ_vec[(i + 1)]));   //Convert operands to integers, pass to power function, assign results to result
+                result = stoi(equ_vec[(i - 1)]) + stoi(equ_vec[(i + 1)]);     //Convert the entries on either side of the operator to strings, and perform the operation
+                replace_sub_equ(equ_vec, i - 1, 3, result);         //Replace sub-equation with result
+                break;      //End the for loop, so we can restart the iteration from the left side
+            }
+            else if (equ_vec[i] == "-") {               //If the entry at current index is a -,
+                found_operator = true;      //Update operator tracker
+                result = stoi(equ_vec[(i - 1)]) - stoi(equ_vec[(i + 1)]);     //Convert the entries on either side of the operator to strings, and perform the operation
                 replace_sub_equ(equ_vec, i - 1, 3, result);         //Replace sub-equation with result
                 break;      //End the for loop, so we can restart the iteration from the left side
             }
@@ -123,7 +131,7 @@ void exp_calc(vector<string> &equ_vec) {
                                         //Otherwise, there are no more operators in the equation, found_operator remains false, loop ends
 }
 
-void mult_div_mod_calc(vector<string> &equ_vec) {
+void mult_div_mod_calc(vector<string>& equ_vec) {
     bool found_operator = false;            //Variable to track if we completed a pass through the equation without finding an operator
     do {
         found_operator = false;             //Reset found operator tracker to false
@@ -153,29 +161,25 @@ void mult_div_mod_calc(vector<string> &equ_vec) {
         }
     } while (found_operator == true);   //If we found an operator, found_operator was updated to true, loop continues. 
                                         //Otherwise, there are no more operators in the equation, found_operator remains false, loop ends
+    add_sub_calc(equ_vec);              //Call addition and subtraction function
 }
 
-void add_sub_calc(vector<string> &equ_vec) {
+void exp_calc(vector<string>& equ_vec) {
     bool found_operator = false;            //Variable to track if we completed a pass through the equation without finding an operator
     do {
         found_operator = false;             //Reset found operator tracker to false
         int result;                         //Variable to store the result
         for (int i = 0; i < equ_vec.size(); i++) {   //Iterate over indices in equ_vec
-            if (equ_vec[i] == "+") {               //If the entry at current index is a +,
+            if (equ_vec[i] == "^") {               //If the entry at current index is a ^,
                 found_operator = true;      //Update operator tracker
-                result = stoi(equ_vec[(i - 1)]) + stoi(equ_vec[(i + 1)]);     //Convert the entries on either side of the operator to strings, and perform the operation
-                replace_sub_equ(equ_vec, i - 1, 3, result);         //Replace sub-equation with result
-                break;      //End the for loop, so we can restart the iteration from the left side
-            }
-            else if (equ_vec[i] == "-") {               //If the entry at current index is a -,
-                found_operator = true;      //Update operator tracker
-                result = stoi(equ_vec[(i - 1)]) - stoi(equ_vec[(i + 1)]);     //Convert the entries on either side of the operator to strings, and perform the operation
+                result = pow(stoi(equ_vec[(i - 1)]), stoi(equ_vec[(i + 1)]));   //Convert operands to integers, pass to power function, assign results to result
                 replace_sub_equ(equ_vec, i - 1, 3, result);         //Replace sub-equation with result
                 break;      //End the for loop, so we can restart the iteration from the left side
             }
         }
     } while (found_operator == true);   //If we found an operator, found_operator was updated to true, loop continues. 
                                         //Otherwise, there are no more operators in the equation, found_operator remains false, loop ends
+    mult_div_mod_calc(equ_vec);         //Call multiplication, division, and modulo function
 }
 
 string remove_spaces(string &old_str) {
@@ -211,9 +215,7 @@ int main() {
         vec_print<string>(equ_vec);             //Print equation vector for verification purposes - remove before final submission
         cout << "\n\n";
 
-        exp_calc(equ_vec);                      //Call function to perform exponentiation
-        mult_div_mod_calc(equ_vec);             //Call function to perform multiplication, division, and modulo
-        add_sub_calc(equ_vec);                  //Call function to perform addition and subtraction
+        exp_calc(equ_vec);                      //Start calculation function sequence
 
         vec_print<string>(equ_vec);             //Print final vector, should contain only a single number-string, the final result of the calculations
 
