@@ -16,9 +16,14 @@ private:
     httplib::Server _server {};
     inja::Environment _inja {};
     ExampleService &_example;
-protected:
+
+    // responds to the endpoint: /
     void get_index(const httplib::Request &req, httplib::Response &res);
+
+    // responds to the endpoint: /user
     void get_users_page(const httplib::Request &req, httplib::Response &res);
+
+    // responds to the endpoint: /user?id=`id`
     void get_user_at_id(const httplib::Request &req, httplib::Response &res);
 public:
     // links together all of the other pieces of the web app
