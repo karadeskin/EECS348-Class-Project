@@ -33,12 +33,12 @@ int main(int argc, char *argv[]) {
 
         // set up the sqlite3 user DAO
         std::ifstream schema_loc(config["schema"].get<std::string>());
-        auto sql_dao = std::make_unique<SQLUserDatabaseAccessObject>();
-        sql_dao->attach(config["db"]);
-        sql_dao->run_schema(schema_loc);
+        auto user_dao = std::make_shared<SQLUserDatabaseAccessObject>();
+        user_dao->attach(config["db"]);
+        user_dao->run_schema(schema_loc);
 
         // instantiate an example service
-        ExampleService example(std::move(sql_dao));
+        ExampleService example(user_dao);
 
         // pass the service to our app and begin running
         auto app = App(config, example);

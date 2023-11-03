@@ -1,6 +1,7 @@
 #ifndef __CALC_EXAMPLE_SERVICE_HPP__
 #define __CALC_EXAMPLE_SERVICE_HPP__
 
+#include <iostream>
 #include <memory>
 #include <optional>
 
@@ -8,13 +9,14 @@
 
 class ExampleService {
 private:
-    std::unique_ptr<UserDatabaseAccessObject> _user_dao {};
+    std::shared_ptr<UserDatabaseAccessObject> _user_dao {};
 public:
-    ExampleService(std::unique_ptr<UserDatabaseAccessObject> user_dao) : _user_dao(std::move(user_dao)) {}
+    ExampleService(std::shared_ptr<UserDatabaseAccessObject> user_dao) : _user_dao(std::move(user_dao)) {}
 
     // given an id, query the user dao for the user with that id
-    std::optional<std::string> query_username(int id) {
+    std::optional<std::string> query_username(int id) noexcept {
         auto user = _user_dao->get_user(id);
+        std::cout << _user_dao.use_count() << std::endl;
 
         if (user) {
             return user.value().username;
