@@ -12,7 +12,7 @@
 
 #include "user.hpp"
 #include "sql_interface.hpp"
-#include "dao.hpp"
+#include "user_dao.hpp"
 
 class SQLUserDatabaseAccessObject : public UserDatabaseAccessObject {
 private:
