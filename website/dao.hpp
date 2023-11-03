@@ -5,11 +5,13 @@
 #include <optional>
 #include <string>
 
+#include <nlohmann/json.hpp>
+
 #include "user.hpp"
 
 class UserDatabaseAccessObject {
 public:
-    UserDatabaseAccessObject() {}
+    UserDatabaseAccessObject(const nlohmann::json &config) {}
     virtual ~UserDatabaseAccessObject() noexcept {}
 
     virtual std::optional<User> get_user(int id) noexcept = 0;

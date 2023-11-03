@@ -16,7 +16,6 @@ public:
     // given an id, query the user dao for the user with that id
     std::optional<std::string> query_username(int id) noexcept {
         auto user = _user_dao->get_user(id);
-        std::cout << _user_dao.use_count() << std::endl;
 
         if (user) {
             return user.value().username;

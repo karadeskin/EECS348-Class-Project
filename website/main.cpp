@@ -32,10 +32,7 @@ int main(int argc, char *argv[]) {
         }
 
         // set up the sqlite3 user DAO
-        std::ifstream schema_loc(config["schema"].get<std::string>());
-        auto user_dao = std::make_shared<SQLUserDatabaseAccessObject>();
-        user_dao->attach(config["db"]);
-        user_dao->run_schema(schema_loc);
+        auto user_dao = std::make_shared<SQLUserDatabaseAccessObject>(config);
 
         // instantiate an example service
         ExampleService example(user_dao);
@@ -44,6 +41,8 @@ int main(int argc, char *argv[]) {
         auto app = App(config, example);
         app.run();
     } catch (std::exception &e) {
+        std::cerr << e.what() << '\n';
+    } catch (SQLError &e) {
         std::cerr << e.what() << '\n';
     }
 

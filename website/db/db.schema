@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
-    username STRING UNIQUE NOT NULL,
+    username STRING NOT NULL,
     password STRING NOT NULL
 );
