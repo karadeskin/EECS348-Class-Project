@@ -5,7 +5,7 @@
 #include <memory>
 #include <optional>
 
-#include "../dao.hpp"
+#include "../user_dao.hpp"
 
 class ExampleService {
 private:

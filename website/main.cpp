@@ -8,7 +8,7 @@
 
 #include "services/example_service.hpp"
 #include "app.hpp"
-#include "sql_dao.hpp"
+#include "sql_user_dao.hpp"
 
 nlohmann::json read_config(const std::string &path) {
     std::ifstream f(path);
