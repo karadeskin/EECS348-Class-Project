@@ -6,8 +6,9 @@
 #include <sqlite/sqlite3.h>
 #include <httplib.h>
 
-#include "app.h"
-#include "sql_dao.h"
+#include "services/example_service.hpp"
+#include "app.hpp"
+#include "sql_dao.hpp"
 
 nlohmann::json read_config(const std::string &path) {
     std::ifstream f(path);
@@ -30,14 +31,17 @@ int main(int argc, char *argv[]) {
             config = read_config("server_config.json");
         }
 
-        // set up the SQLite DAO
+        // set up the sqlite3 user DAO
         std::ifstream schema_loc(config["schema"].get<std::string>());
-        auto sql_dao = std::make_unique<SqliteDAO>();
+        auto sql_dao = std::make_unique<SQLUserDatabaseAccessObject>();
         sql_dao->attach(config["db"]);
         sql_dao->run_schema(schema_loc);
 
-        // begin running the app
-        auto app = App(config);
+        // instantiate an example service
+        ExampleService example(std::move(sql_dao));
+
+        // pass the service to our app and begin running
+        auto app = App(config, example);
         app.run();
     } catch (std::exception &e) {
         std::cerr << e.what() << '\n';

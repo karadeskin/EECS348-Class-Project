@@ -1,5 +1,5 @@
-#ifndef __CALC_SQL_INTERFACE_H__
-#define __CALC_SQL_INTERFACE_H__
+#ifndef __CALC_SQL_INTERFACE_HPP__
+#define __CALC_SQL_INTERFACE_HPP__
 
 #include <memory>
 #include <sqlite/sqlite3.h>
@@ -12,4 +12,4 @@ struct SQLDeleter {
 using SQLiteHandle = std::unique_ptr<sqlite3, SQLDeleter>;
 using SQLiteStatementHandle = std::unique_ptr<sqlite3_stmt, SQLDeleter>;
 
-#endif // __CALC_SQL_INTERFACE_H__
+#endif // __CALC_SQL_INTERFACE_HPP__

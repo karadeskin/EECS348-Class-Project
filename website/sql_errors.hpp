@@ -1,11 +1,11 @@
-#ifndef __CALC_SQL_ERRORS_H__
-#define __CALC_SQL_ERRORS_H__
+#ifndef __CALC_SQL_ERRORS_HPP__
+#define __CALC_SQL_ERRORS_HPP__
 
 #include <cstdio>
 #include <memory>
 #include <sqlite/sqlite3.h>
 
-#include "sql_interface.h"
+#include "sql_interface.hpp"
 
 struct SQLError {
 protected:
@@ -63,4 +63,4 @@ struct SQLNotFoundError : public SQLError {
     }
 };
 
-#endif // __CALC_SQL_ERRORS_H__
+#endif // __CALC_SQL_ERRORS_HPP__

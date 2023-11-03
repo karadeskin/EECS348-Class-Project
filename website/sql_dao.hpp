@@ -1,16 +1,18 @@
-#ifndef __CALC_SQL_DATABASE_ACCESS_OBJECT_H__
-#define __CALC_SQL_DATABASE_ACCESS_OBJECT_H__
+#ifndef __CALC_SQL_USER_DAO_HPP__
+#define __CALC_SQL_USER_DAO_HPP__
 
 #include <iostream>
 #include <memory>
+#include <optional>
+
 #include <sqlite/sqlite3.h>
 
-#include "user.h"
-#include "sql_interface.h"
-#include "sql_errors.h"
-#include "dao.h"
+#include "user.hpp"
+#include "sql_interface.hpp"
+#include "sql_errors.hpp"
+#include "dao.hpp"
 
-class SqliteDAO : public DatabaseAccessObject {
+class SQLUserDatabaseAccessObject : public UserDatabaseAccessObject {
 private:
     std::unique_ptr<sqlite3, SQLDeleter> _db {};
 
@@ -21,9 +23,7 @@ private:
     }
 
 public:
-    SqliteDAO() : DatabaseAccessObject() {}
-    SqliteDAO(const SqliteDAO &rhs) = delete;
-    SqliteDAO(SqliteDAO &&rhs) : DatabaseAccessObject(), _db(std::move(rhs._db)) {}
+    SQLUserDatabaseAccessObject() : UserDatabaseAccessObject() {}
 
     void attach_memory() {
         _db = std::unique_ptr<sqlite3, SQLDeleter>(open_sqlite3_db(":memory:"));
@@ -53,32 +53,26 @@ public:
     }
 
     // TODO not implemented
-    virtual User get_user(int id) override {
-        User user;
-
-        return user;
+    virtual std::optional<User> get_user(int id) noexcept override {
+        return std::nullopt;
     };
 
     // TODO not implemented
-    virtual User create_user(const std::string &name, const std::string &password) override {
-        User user;
-
-        return user;
+    virtual std::optional<User> create_user(const std::string &name, const std::string &password) noexcept override {
+        return std::nullopt;
     };
 
     // TODO not implemented
-    virtual User update_user(int id) override {
-        User user;
-
-        return user;
+    virtual std::optional<User> update_user(int id) noexcept override {
+        return std::nullopt;
     }
 
     // TODO not implemented
-    virtual void delete_user(int id) override {
-
+    virtual bool delete_user(int id) noexcept override {
+        return false;
     }
 
-    ~SqliteDAO() noexcept {}
+    ~SQLUserDatabaseAccessObject() noexcept {}
 };
 
-#endif // __CALC_SQL_DATABASE_ACCESS_OBJECT_H__
+#endif // __CALC_SQL_USER_DAO_HPP__
