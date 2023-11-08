@@ -1,0 +1,29 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os : [ubuntu-latest, macos-latest]
+        build-config : ["debug", "release"]
+        include:
+          - os: ubuntu-latest
+            premake: ./linux-build.sh
+            build: make
+          - os: macos-latest
+            premake: ./macos-build.sh
+            build: make
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: premake
+      run: ${{ matrix.premake }}
+    - name: build
+      run: ${{ matrix.build }} config=${{ matrix.build-config }}

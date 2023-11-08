@@ -47,3 +47,6 @@ obj
 Makefile
 
 .vs
+
+# ignore our db
+*.sqlite3
