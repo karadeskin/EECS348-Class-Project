@@ -331,10 +331,9 @@ int main() {
 }
 
 /*
-Notes:  Need help figuring out string formatting so character variable can be inserted in error messages.
+Notes:  Currently empty parentheses - () - are replaced with a zero.
+        What is the proper way to handle them? Should an error be thrown? Or is that acceptable?
 
-        When implementing () handling, negatives relating to () will hang in equation
-        Implement function to call from calculator functions to process negatives - 
-        if operator is followed by negative, call process_negative
-        process_negative replaces negative and number entries with a negative number entry
+        Need help figuring out string formatting so character variable can be inserted in error messages
+        String formatting for error messages is of little importance, and should not be worried about at this time.
 */
