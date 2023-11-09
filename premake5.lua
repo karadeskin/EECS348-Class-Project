@@ -11,7 +11,7 @@ include "thirdparty/sqlite-3.43.1"
 project "Calculator"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++2a"
 
     targetdir "bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
     objdir "obj/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -19,6 +19,14 @@ project "Calculator"
     links {
         "sqlite"
     }
+
+    filter "system:Linux"
+        links {
+            "pthread",
+            "dl"
+        }
+
+    filter {}
 
     includedirs {
         "thirdparty/inja-3.4.0/",
@@ -44,7 +52,7 @@ project "Calculator"
 project "Website"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++2a"
 
     targetdir "bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
     objdir "obj/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -52,6 +60,15 @@ project "Website"
     links {
         "sqlite"
     }
+
+    filter "system:Linux"
+        links {
+            "pthread",
+            "dl"
+        }
+
+    filter {}
+
 
     includedirs {
         "thirdparty/inja-3.4.0/",

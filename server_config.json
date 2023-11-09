@@ -1,0 +1,10 @@
+{
+    "port": 3000,
+    "schema": "website/db/db.schema",
+    "db": "website/db/calc.sqlite3",
+    "example" : {
+        "text": "hello, world",
+        "date": "November 1st",
+        "animals": ["dogs", "just dogs", "dogs", "not any other animal", "not even cats", "only dogs"]
+    }
+}
