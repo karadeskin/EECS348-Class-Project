@@ -84,6 +84,10 @@ project "Website"
         "include/**.h"
     }
 
+    postbuildcommands {
+        "cp ./bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name} ./www/%{prj.name}"
+    }
+
     filter "configurations:Debug*"
         defines { "DEBUG" }
         symbols "On"
