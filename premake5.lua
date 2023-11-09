@@ -79,6 +79,7 @@ project "Website"
 
     files {
         "website/**.cpp",
+        "website/**.hpp",
         "website/**.h",
         "include/**.h"
     }

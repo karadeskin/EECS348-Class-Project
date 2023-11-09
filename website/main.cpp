@@ -8,7 +8,9 @@
 
 #include "services/example_service.hpp"
 #include "app.hpp"
-#include "sql_user_dao.hpp"
+#include "db/sql_user_dao.hpp"
+#include "db/sql_history_dao.hpp"
+#include "db/sql_script_dao.hpp"
 
 nlohmann::json read_config(const std::string &path) {
     std::ifstream f(path);
@@ -31,8 +33,10 @@ int main(int argc, char *argv[]) {
             config = read_config("server_config.json");
         }
 
-        // set up the sqlite3 user DAO
+        // set up the sqlite3 user DAOs
         auto user_dao = std::make_shared<SQLUserDatabaseAccessObject>(config);
+        auto history_dao = std::make_shared<SQLHistoryDatabaseAccessObject>(config);
+        auto script_dao = std::make_shared<SQLScriptDatabaseAccessObject>(config);
 
         // instantiate an example service
         ExampleService example(user_dao);
