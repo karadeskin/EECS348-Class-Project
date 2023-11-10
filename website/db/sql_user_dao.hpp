@@ -10,40 +10,13 @@
 #include <sqlite/sqlite3.h>
 #include <nlohmann/json.hpp>
 
-#include "user.hpp"
-#include "sql_interface.hpp"
+#include "sql_dao.hpp"
 #include "user_dao.hpp"
 
-class SQLUserDatabaseAccessObject : public UserDatabaseAccessObject {
-private:
-    SQLiteDatabase _db;
-
-    void run_schema(std::ifstream &schema) {
-        if (!schema.is_open()) {
-            throw std::runtime_error("Schema not found");
-        }
-
-        char *error = nullptr;
-        std::string statements((std::istreambuf_iterator<char>(schema)), std::istreambuf_iterator<char>());
-        _db.execute_sql_statement(statements.c_str());
-    }
-
+class SQLUserDatabaseAccessObject : public UserDatabaseAccessObject, public SQLDatabaseAccessObject {
 public:
-    SQLUserDatabaseAccessObject(const nlohmann::json &config) : UserDatabaseAccessObject(config) {
-        if (config.at("db").is_string()) {
-            _db.attach(config["db"]);
-        } else {
-            _db.attach_memory();
-        }
-
-        if (config.at("schema").is_string()) {
-            std::ifstream schema;
-            schema.open(config["schema"].get<std::string>());
-            run_schema(schema);
-        } else {
-            throw std::runtime_error("Database schema not found");
-        }
-    }
+    SQLUserDatabaseAccessObject(const nlohmann::json &config)
+        : UserDatabaseAccessObject(), SQLDatabaseAccessObject(config) {}
 
     // TODO not implemented
     virtual std::optional<User> get_user(int id) noexcept override {
