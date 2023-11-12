@@ -79,8 +79,13 @@ project "Website"
 
     files {
         "website/**.cpp",
+        "website/**.hpp",
         "website/**.h",
         "include/**.h"
+    }
+
+    postbuildcommands {
+        "cp ./bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name} ./www/%{prj.name}"
     }
 
     filter "configurations:Debug*"
