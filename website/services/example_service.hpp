@@ -5,7 +5,7 @@
 #include <memory>
 #include <optional>
 
-#include "../user_dao.hpp"
+#include "../db/user_dao.hpp"
 
 class ExampleService {
 private:
@@ -18,7 +18,7 @@ public:
         auto user = _user_dao->get_user(id);
 
         if (user) {
-            return user.value().username;
+            return user.value()._username;
         }
 
         return std::nullopt;

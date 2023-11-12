@@ -4,10 +4,8 @@
 #include <string>
 
 struct User {
-    std::string username {};
-    std::string password {};
-
-    User() {}
+    std::string _username {};
+    std::string _password {};
 };
 
 #endif // __CALC_USER_HPP__

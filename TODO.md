@@ -1,0 +1,3 @@
+- class that handles loading files into strings
+- class that handles HTML templating
+- class that handles logging across layers

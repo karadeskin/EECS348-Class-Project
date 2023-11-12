@@ -7,13 +7,13 @@
 
 #include <nlohmann/json.hpp>
 
-#include "user.hpp"
+#include "../user.hpp"
 
 class UserDatabaseAccessObject {
-public:
-    UserDatabaseAccessObject(const nlohmann::json &config) {}
+protected:
+    UserDatabaseAccessObject() {}
     virtual ~UserDatabaseAccessObject() noexcept {}
-
+public:
     virtual std::optional<User> get_user(int id) noexcept = 0;
     virtual std::optional<User> create_user(const std::string &name, const std::string &password) noexcept = 0;
     virtual std::optional<User> update_user(int id) noexcept = 0;
