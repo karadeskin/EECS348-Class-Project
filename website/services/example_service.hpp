@@ -23,6 +23,16 @@ public:
 
         return std::nullopt;
     }
+
+    std::optional<int> create_user(const std::string &username, const std::string &password) {
+        auto user_id = _user_dao->create_user(username, password);
+
+        if (user_id) {
+            return user_id.value();
+        }
+
+        return std::nullopt;
+    }
 };
 
 #endif // __CALC_EXAMPLE_SERVICE_HPP__
