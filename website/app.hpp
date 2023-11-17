@@ -25,6 +25,9 @@ private:
 
     // responds to the endpoint: /user?id=`id`
     void get_user_at_id(const httplib::Request &req, httplib::Response &res);
+
+    // responds to the endpoint: /create?name=`username`&password=`password`
+    void create_user(const httplib::Request &req, httplib::Response &res);
 public:
     // links together all of the other pieces of the web app
     App(const nlohmann::json &config, ExampleService &example);

@@ -1,8 +1,12 @@
 #ifndef __CALC_SQL_INTERFACE_HPP__
 #define __CALC_SQL_INTERFACE_HPP__
 
+#include <vector>
+
 #include <memory>
 #include <sqlite/sqlite3.h>
+
+#include "../user.hpp"
 
 struct SQLDeleter {
     void operator()(sqlite3 *db) noexcept { sqlite3_close_v2(db); }
@@ -137,6 +141,64 @@ public:
 
             throw SQLGenericError(_db, stmt);
         }
+    }
+
+    int select_int(const char *statement, ...) {
+        va_list argp;
+        va_start(argp, statement);
+
+        auto stmt = prepare_sql_statement(statement, argp);
+
+        va_end(argp);
+
+        int rc;
+        int id;
+        while ((rc = sqlite3_step(stmt.get())) == SQLITE_ROW) {
+            id = sqlite3_column_int(stmt.get(), 0);
+        }
+
+        if (rc != SQLITE_DONE) {
+            if (rc == SQLITE_BUSY) {
+                throw SQLBusyError(_db, stmt);
+            } else if (rc == SQLITE_CONSTRAINT) {
+                throw SQLConstraintError(_db, stmt);
+            }
+
+            throw SQLGenericError(_db, stmt);
+        }
+
+        return id;
+    }
+
+    std::vector<User> select_users(const char *statement, ...) {
+        va_list argp;
+        va_start(argp, statement);
+
+        auto stmt = prepare_sql_statement(statement, argp);
+
+        va_end(argp);
+
+        std::vector<User> user_vector {};
+
+        int rc;
+        while ((rc = sqlite3_step(stmt.get())) == SQLITE_ROW) {
+            User u;
+            u._username = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.get(), 0)));
+            u._password = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.get(), 1)));
+            user_vector.push_back(u);
+        }
+
+        if (rc != SQLITE_DONE) {
+            if (rc == SQLITE_BUSY) {
+                throw SQLBusyError(_db, stmt);
+            } else if (rc == SQLITE_CONSTRAINT) {
+                throw SQLConstraintError(_db, stmt);
+            }
+
+            throw SQLGenericError(_db, stmt);
+        }
+
+        return user_vector;
     }
 };
 

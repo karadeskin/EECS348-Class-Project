@@ -36,6 +36,18 @@ App::App(const nlohmann::json &config, ExampleService &example) : _config(config
             get_user_at_id(req, res);
         }
     });
+
+    _server.Get("/create", [&](const httplib::Request &req, httplib::Response &res) {
+        auto username = req.get_param_value("name");
+        auto password = req.get_param_value("password");
+
+        if (username.empty() || password.empty()) {
+            // error page
+            get_users_page(req, res);
+        } else {
+            create_user(req, res);
+        }
+    });
 }
 
 void App::get_index(const httplib::Request &req, httplib::Response &res) {
@@ -71,6 +83,31 @@ void App::get_user_at_id(const httplib::Request &req, httplib::Response &res) {
             { "reason", e.what() },
         };
         res.set_content(_inja.render(error_response, content), "text/html");
+    }
+}
+
+void App::create_user(const httplib::Request &req, httplib::Response &res) {
+    auto username = req.get_param_value("name");
+    auto password = req.get_param_value("password");
+
+    try {
+        auto user = _example.create_user(username, password);
+
+        if (user) {
+            nlohmann::json content = {
+                { "username", user.value() },
+            };
+
+            res.set_content(_inja.render(user_query, content), "text/html");
+        } else {
+            nlohmann::json content = {
+                { "status_code", "404" },
+                { "reason", "User with that ID doesn't exist" },
+            };
+            res.set_content(_inja.render(error_response, content), "text/html");
+        }
+    } catch (std::exception &e) {
+        // bad
     }
 }
 
