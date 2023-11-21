@@ -76,23 +76,6 @@ class SQLiteDatabase {
 private:
     SQLiteHandle _db {};
     char _stmt_buffer[4096];
-
-    SQLiteStatementHandle prepare_sql_statement(const char *statement, va_list argp) {
-        if (!_db) {
-            throw SQLNotAttachedError();
-        }
-
-        int rc = 0;
-        sqlite3_stmt *compiled_stmt = nullptr;
-        int bytes_written = std::vsnprintf(_stmt_buffer, sizeof(_stmt_buffer), statement, argp);
-
-        rc = sqlite3_prepare_v2(_db.get(), _stmt_buffer, bytes_written, &compiled_stmt, nullptr);
-        if (rc != SQLITE_OK) {
-            throw SQLPrepareError(_db, _stmt_buffer);
-        }
-
-        return SQLiteStatementHandle(compiled_stmt);
-    }
 public:
     SQLiteDatabase() {}
 
@@ -121,6 +104,32 @@ public:
 
     void close() noexcept {
         _db.reset();
+    }
+
+    SQLiteHandle& handle() {
+        return _db;
+    }
+
+    SQLiteStatementHandle prepare_sql_statement(const char *statement, ...) {
+        if (!_db) {
+            throw SQLNotAttachedError();
+        }
+
+        va_list argp;
+        va_start(argp, statement);
+
+        int rc = 0;
+        sqlite3_stmt *compiled_stmt = nullptr;
+        int bytes_written = std::vsnprintf(_stmt_buffer, sizeof(_stmt_buffer), statement, argp);
+
+        va_end(argp);
+
+        rc = sqlite3_prepare_v2(_db.get(), _stmt_buffer, bytes_written, &compiled_stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            throw SQLPrepareError(_db, _stmt_buffer);
+        }
+
+        return SQLiteStatementHandle(compiled_stmt);
     }
 
     void execute_sql_statement(const char *statement, ...) {
@@ -168,37 +177,6 @@ public:
         }
 
         return id;
-    }
-
-    std::vector<User> select_users(const char *statement, ...) {
-        va_list argp;
-        va_start(argp, statement);
-
-        auto stmt = prepare_sql_statement(statement, argp);
-
-        va_end(argp);
-
-        std::vector<User> user_vector {};
-
-        int rc;
-        while ((rc = sqlite3_step(stmt.get())) == SQLITE_ROW) {
-            User u;
-            u._username = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.get(), 0)));
-            u._password = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.get(), 1)));
-            user_vector.push_back(u);
-        }
-
-        if (rc != SQLITE_DONE) {
-            if (rc == SQLITE_BUSY) {
-                throw SQLBusyError(_db, stmt);
-            } else if (rc == SQLITE_CONSTRAINT) {
-                throw SQLConstraintError(_db, stmt);
-            }
-
-            throw SQLGenericError(_db, stmt);
-        }
-
-        return user_vector;
     }
 };
 

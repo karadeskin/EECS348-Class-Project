@@ -22,7 +22,7 @@ static const char *error_response =
     "</body>"
     "</html>";
 
-App::App(const nlohmann::json &config, ExampleService &example) : _config(config), _example(example) {
+App::App(const nlohmann::json &config, AuthService &auth) : _config(config), _auth(auth) {
     _server.Get("/", [&](const httplib::Request &req, httplib::Response &res) {
         get_index(req, res);
     });
@@ -56,59 +56,6 @@ void App::get_index(const httplib::Request &req, httplib::Response &res) {
 
 void App::get_users_page(const httplib::Request &req, httplib::Response &res) {
     res.set_content("<user page goes here>", "text/plain");
-}
-
-void App::get_user_at_id(const httplib::Request &req, httplib::Response &res) {
-    auto user_id = req.get_param_value("id");
-
-    try {
-        auto username = _example.query_username(std::stoi(user_id));
-
-        if (username) {
-            nlohmann::json content = {
-                { "username", username.value() },
-            };
-
-            res.set_content(_inja.render(user_query, content), "text/html");
-        } else {
-            nlohmann::json content = {
-                { "status_code", "404" },
-                { "reason", "User with that ID doesn't exist" },
-            };
-            res.set_content(_inja.render(error_response, content), "text/html");
-        }
-    } catch (std::exception &e) {
-        nlohmann::json content = {
-            { "status_code", "500" },
-            { "reason", e.what() },
-        };
-        res.set_content(_inja.render(error_response, content), "text/html");
-    }
-}
-
-void App::create_user(const httplib::Request &req, httplib::Response &res) {
-    auto username = req.get_param_value("name");
-    auto password = req.get_param_value("password");
-
-    try {
-        auto user = _example.create_user(username, password);
-
-        if (user) {
-            nlohmann::json content = {
-                { "username", user.value() },
-            };
-
-            res.set_content(_inja.render(user_query, content), "text/html");
-        } else {
-            nlohmann::json content = {
-                { "status_code", "404" },
-                { "reason", "User with that ID doesn't exist" },
-            };
-            res.set_content(_inja.render(error_response, content), "text/html");
-        }
-    } catch (std::exception &e) {
-        // bad
-    }
 }
 
 void App::run() {

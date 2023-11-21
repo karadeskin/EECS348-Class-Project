@@ -19,43 +19,56 @@ public:
         : UserDatabaseAccessObject(), SQLDatabaseAccessObject(config) {}
 
     // TODO not implemented
-    virtual std::optional<User> get_user(int id) noexcept override {
+    virtual std::optional<User> get_user(int id) override {
         User user;
 
-        try {
-            auto user = _db.select_users("SELECT username, password FROM users WHERE id=%d", id);
+        auto query = _db.prepare_sql_statement("SELECT username, password FROM users WHERE id=%d", id);
+        int rc = sqlite3_step(query.get());
 
-            if (user.size() > 0) {
-                return user[0];
-            }
-        } catch (SQLError &e) {
-
+        if (rc == SQLITE_ROW) {
+            user._username = std::string(reinterpret_cast<const char*>(sqlite3_column_text(query.get(), 0)));
+            user._password = std::string(reinterpret_cast<const char*>(sqlite3_column_text(query.get(), 1)));
         }
 
-        return std::nullopt;
+        if (rc != SQLITE_DONE) {
+            if (rc == SQLITE_DONE) {
+                return std::nullopt;
+            } else if (rc == SQLITE_BUSY) {
+                throw SQLBusyError(_db.handle(), query);
+            } else if (rc == SQLITE_CONSTRAINT) {
+                throw SQLConstraintError(_db.handle(), query);
+            }
+
+            throw SQLGenericError(_db.handle(), query);
+        }
+
+        return user;
     };
 
+    virtual bool user_exists(const std::string &name) {
+        auto query = _db.prepare_sql_statement("SELECT * FROM users WHERE username=%s", name.c_str());
+        return sqlite3_step(query.get()) == SQLITE_ROW;
+    }
+
     // TODO not implemented
-    virtual std::optional<int> create_user(const std::string &name, const std::string &password) noexcept override {
+    virtual bool create_user(const std::string &name, const std::string &password) override {
         try{
             _db.execute_sql_statement("INSERT INTO users (username, password) VALUES(\"%s\", \"%s\")", name.c_str(), password.c_str());
-            auto id = _db.select_int("SELECT id FROM users WHERE username=\"%s\" AND password=\"%s\"", name.c_str(), password.c_str());
-            return id;
+            return true;
         } catch (SQLError &e) {
             // TODO later on: report it to the logger
             std::cerr << e.what() << std::endl;
+            return false;
         }
-
-        return std::nullopt;
     };
 
     // TODO not implemented
-    virtual std::optional<User> update_user(int id) noexcept override {
+    virtual std::optional<User> update_user(int id) override {
         return std::nullopt;
     }
 
     // TODO not implemented
-    virtual bool delete_user(int id) noexcept override {
+    virtual bool delete_user(int id) override {
         try {
             _db.execute_sql_statement(R"(DELETE FROM users WHERE id=%d)", id);
             return true;
