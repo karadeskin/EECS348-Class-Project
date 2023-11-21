@@ -5,11 +5,13 @@
 #include <unordered_map>
 #include <string>
 #include <random>
+#include "../db/user_dao.hpp"
 
 class AuthService {
 private:
     std::unordered_map<std::string, std::string> userTokens; //store user session tokens
     std::unordered_map<std::string, std::string> userPasswords; 
+    std::shared_ptr<UserDatabaseAccessObject> _user_dao {};
 
     std::string generateToken() {
         //function to generate random token 
@@ -20,33 +22,33 @@ private:
     }
 
 public:
-    AuthService() {} 
+    AuthService(std::shared_ptr<UserDatabaseAccessObject> user_dao) : _user_dao(std::move(user_dao)) {}
 
     bool createAccount(const std::string& username, const std::string& password) {
-        if (userPasswords.find(username) != userPasswords.end()) {
+        if (_user_dao->userExists(username)) {
             return false;
         }
 
-        //store the username and password in the map
         userPasswords[username] = password;
-        return true; 
+
+        _user_dao->createUser(username, password);
+
+        return true;
     }
 
     std::string login(const std::string& username, const std::string& password) {
         if (userPasswords.find(username) != userPasswords.end() && userPasswords[username] == password) {
-            //generate a session token and store it for the user
             std::string token = generateToken();
             userTokens[username] = token;
             return token;
         }
 
-        return ""; //if login fails
+        return ""; 
     }
 
     bool checkSessionToken(const std::string& username, const std::string& token) {
-        //checking if the session token matches the one stored for the user
         return (userTokens.find(username) != userTokens.end() && userTokens[username] == token);
     }
 };
 
-#endif
+#endif // __AUTH_SERVICE_HPP__
