@@ -6,6 +6,7 @@
 #include <sqlite/sqlite3.h>
 #include <httplib.h>
 
+#include "services/auth_service.hpp"
 #include "services/example_service.hpp"
 #include "app.hpp"
 #include "db/sql_user_dao.hpp"
