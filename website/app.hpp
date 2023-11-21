@@ -20,11 +20,14 @@ private:
     // responds to the endpoint: /
     void get_index(const httplib::Request &req, httplib::Response &res);
 
-    // responds to the endpoint: /user
+    // responds to the endpoint: /error
+    void get_error(const httplib::Request &req, httplib::Response &res);
+
+    // responds to the endpoint: /user?name='username'
     void get_users_page(const httplib::Request &req, httplib::Response &res);
 
-    // responds to the endpoint: /user?id=`id`
-    void get_user_at_id(const httplib::Request &req, httplib::Response &res);
+    // responds to the endpoint: /signup
+    void get_signup(const httplib::Request &req, httplib::Response &res);
 
     // responds to the endpoint: /create?name=`username`&password=`password`
     void create_user(const httplib::Request &req, httplib::Response &res);
