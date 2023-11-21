@@ -7,7 +7,6 @@
 #include <httplib.h>
 
 #include "services/auth_service.hpp"
-#include "services/example_service.hpp"
 #include "app.hpp"
 #include "db/sql_user_dao.hpp"
 #include "db/sql_history_dao.hpp"
