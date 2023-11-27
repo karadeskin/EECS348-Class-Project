@@ -39,10 +39,10 @@ int main(int argc, char *argv[]) {
         auto script_dao = std::make_shared<SQLScriptDatabaseAccessObject>(config);
 
         // instantiate an example service
-        ExampleService example(user_dao);
+        AuthService auth(user_dao);
 
         // pass the service to our app and begin running
-        auto app = App(config, example);
+        auto app = App(config, auth);
         app.run();
     } catch (std::exception &e) {
         std::cerr << e.what() << '\n';

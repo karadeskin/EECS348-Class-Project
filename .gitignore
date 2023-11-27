@@ -45,8 +45,6 @@ obj
 *.sln
 *.vcxproj*
 Makefile
-Website
-Calculator
 
 .vs
 
