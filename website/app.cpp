@@ -60,10 +60,10 @@ App::App(const nlohmann::json &config, AuthService &auth) : _config(config), _au
             std::cout << "/sign-up: empty params\n";
             res.set_redirect("/error", 400);
         } else {
-            if (_auth.createAccount(username, password) == false) {
-                std::cout << "/sign-up: failed to make acc\n";
-            } else {
+            if (_auth.createAccount(username, password)) {
                 std::cout << "/sign-up: made acc\n";
+            } else {
+                std::cout << "/sign-up: failed to make acc\n";
             }
             res.set_redirect("/", 200);
         }

@@ -21,10 +21,12 @@ protected:
     char _buffer[1024];
     int _error_code = 0;
     const char *_error_string = nullptr;
+    const char *_extended_error = nullptr;
     SQLError() {}
     SQLError(const SQLiteHandle &db) {
         _error_code = sqlite3_errcode(db.get());
         _error_string = sqlite3_errstr(_error_code);
+        _extended_error = sqlite3_errstr(sqlite3_extended_errcode(db.get()));
     }
 public:
     char *what() {

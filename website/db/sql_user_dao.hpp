@@ -45,8 +45,14 @@ public:
     };
 
     virtual bool user_exists(const std::string &name) override {
-        auto query = _db.prepare_sql_statement("SELECT * FROM users WHERE username=%s", name.c_str());
-        return sqlite3_step(query.get()) == SQLITE_ROW;
+        try {
+            auto query = _db.prepare_sql_statement("SELECT * FROM users WHERE username=\"%s\"", name.c_str());
+            return sqlite3_step(query.get()) == SQLITE_ROW;
+        } catch (SQLError &e) {
+            std::cerr << e.what() << std::endl;
+        }
+
+        return false;
     }
 
     virtual bool create_user(const std::string &name, const std::string &password) override {
