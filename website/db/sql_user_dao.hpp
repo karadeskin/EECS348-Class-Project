@@ -18,7 +18,6 @@ public:
     SQLUserDatabaseAccessObject(const nlohmann::json &config)
         : UserDatabaseAccessObject(), SQLDatabaseAccessObject(config) {}
 
-    // TODO not implemented
     virtual std::optional<User> get_user(int id) override {
         User user;
 
@@ -50,7 +49,6 @@ public:
         return sqlite3_step(query.get()) == SQLITE_ROW;
     }
 
-    // TODO not implemented
     virtual bool create_user(const std::string &name, const std::string &password) override {
         try{
             _db.execute_sql_statement("INSERT INTO users (username, password) VALUES(\"%s\", \"%s\")", name.c_str(), password.c_str());
@@ -64,6 +62,19 @@ public:
 
     // TODO not implemented
     virtual std::optional<User> update_user(int id) override {
+        return std::nullopt;
+    }
+
+    virtual std::optional<std::string> get_password(const std::string &name) override {
+        auto query = _db.prepare_sql_statement("SELECT password FROM users WHERE username=%s", name.c_str());
+        int rc = sqlite3_step(query.get());
+        std::string password {};
+
+        if (rc == SQLITE_ROW) {
+            password = std::string(reinterpret_cast<const char*>(sqlite3_column_text(query.get(), 1)));
+            return password;
+        }
+
         return std::nullopt;
     }
 

@@ -10,7 +10,6 @@
 class AuthService {
 private:
     std::unordered_map<std::string, std::string> userTokens; //store user session tokens
-    std::unordered_map<std::string, std::string> userPasswords; 
     std::shared_ptr<UserDatabaseAccessObject> _user_dao {};
 
     std::string generateToken() {
@@ -29,13 +28,13 @@ public:
             return false;
         }
 
-        userPasswords[username] = password;
-
         return _user_dao->create_user(username, password);
     }
 
     std::string login(const std::string& username, const std::string& password) {
-        if (userPasswords.find(username) != userPasswords.end() && userPasswords[username] == password) {
+        auto db_password = _user_dao->get_password(username);
+
+        if (db_password.has_value() && db_password.value() == password) {
             std::string token = generateToken();
             userTokens[username] = token;
             return token;
