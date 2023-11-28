@@ -6,15 +6,20 @@
 class Templating {
 private:
     std::unordered_map<std::string, std::string> templates;
+    inja::Environment env;
 
 public:
     void load(const std::string &fileName) {
-        
-        std::string fileContent = ""; // load file content via string 
-
+    std::ifstream fileStream(fileName); 
+    if (fileStream) {
+        std::string fileContent((std::istreambuf_iterator<char>(fileStream)), std::istreambuf_iterator<char>());
         // store in memory
         templates[fileName] = fileContent;
+        fileStream.close(); // close file
+    } else {
+        std::cerr << "Unable to open file: " << fileName << std::endl;
     }
+}
 
     std::string render(const std::string &fileName, const nlohmann::json &data) {
         // check if the template exists
@@ -25,7 +30,6 @@ public:
         // template content
         std::string templateContent = templates[fileName];
 
-        inja::Environment env;
         env.setExpression("<%", "%>"); 
         try {
             return env.render(templateContent, data);
@@ -34,3 +38,5 @@ public:
         }
     }
 };
+
+
