@@ -16,7 +16,8 @@ public:
             std::string fileContent((std::istreambuf_iterator<char>(fileStream)), std::istreambuf_iterator<char>());
             // parse the file content and store in memory
             inja::Template contentTemplate = env.parse(fileContent);
-            templates[fileName] = contentTemplate;
+            std::unordered_map<std::string, inja::Template> html;
+            html[fileName] = contentTemplate;
             fileStream.close(); // close file
         } else {
             std::cerr << "Unable to open file: " << fileName << std::endl;
