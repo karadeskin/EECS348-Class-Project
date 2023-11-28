@@ -30,7 +30,7 @@ public:
         // template content
         std::string templateContent = templates[fileName];
 
-        env.setExpression("<%", "%>"); 
+       
         try {
             return env.render(templateContent, data);
         } catch (const inja::RenderError &e) {
