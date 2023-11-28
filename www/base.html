@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-
-    </head>
-    <body>
-
-    </body>
+<html>
+<head>
+  {% block head %}
+  <link rel="stylesheet" href="style.css" />
+  <title>{% block title %}{% endblock %} - Calculator Website</title>
+  {% endblock %}
+</head>
+<body>
+  <div id="content">{% block content %}{% endblock %}</div>
+</body>
 </html>
