@@ -1,0 +1,27 @@
+{% extends "base_template.html" %}
+
+{% block title %}
+Calculator
+{% endblock %}
+
+{% block content %}
+<div class="calculator">
+    <div class="display" id="display"><% displayValue %></div>
+    <div>
+        <!-- buttons for calculator -->
+        <button class="button" onclick="appendToDisplay('7')">7</button>
+        <button class="button" onclick="appendToDisplay('8')">8</button>
+        <button class="button" onclick="appendToDisplay('9')">9</button>
+        <button class="button" onclick="appendToDisplay('+')">+</button>
+    </div>
+    <!-- additional rows of buttons????? idk if this is correct -->
+</div>
+
+<script>
+    // functions to interact with the calculator
+    function appendToDisplay(value) {
+        
+    }
+    // more functions for calculator functionality
+</script>
+{% endblock %}
