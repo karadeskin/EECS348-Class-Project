@@ -8,7 +8,7 @@ class Templating {
 private:
     std::unordered_map<std::string, inja::Template> templates;
     inja::Environment env;
-    std::unordered_map<std::string, inja::Template> html;
+    std::unordered_map<std::string, std::string> html;
 
 public:
     void load(const std::string &fileName) {
