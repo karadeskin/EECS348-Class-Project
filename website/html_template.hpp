@@ -8,6 +8,7 @@ class Templating {
 private:
     std::unordered_map<std::string, inja::Template> templates;
     inja::Environment env;
+    std::unordered_map<std::string, inja::Template> html;
 
 public:
     void load(const std::string &fileName) {
@@ -16,7 +17,6 @@ public:
             std::string fileContent((std::istreambuf_iterator<char>(fileStream)), std::istreambuf_iterator<char>());
             // parse the file content and store in memory
             inja::Template contentTemplate = env.parse(fileContent);
-            std::unordered_map<std::string, inja::Template> html;
             html[fileName] = contentTemplate;
             fileStream.close(); // close file
         } else {
