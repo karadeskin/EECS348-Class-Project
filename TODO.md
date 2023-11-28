@@ -29,3 +29,6 @@
   - Look up a script from the scripts db
   - Add a new script to the scripts db
   - Evaluate a script from input passed as a JSON (probably)
+
+- Script page
+  - Provide a form to create a new script or evaluate an existing script from a shared link
