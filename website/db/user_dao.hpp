@@ -15,6 +15,7 @@ protected:
     virtual ~UserDatabaseAccessObject() noexcept {}
 public:
     virtual std::optional<User> get_user(int id) = 0;
+    virtual std::optional<std::string> get_password(const std::string &name) = 0;
     virtual bool user_exists(const std::string &name) = 0;
     virtual bool create_user(const std::string &name, const std::string &password) = 0;
     virtual std::optional<User> update_user(int id) = 0;
