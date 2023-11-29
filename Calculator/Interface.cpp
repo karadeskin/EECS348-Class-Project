@@ -31,9 +31,4 @@ string Interface::solve_equation(string equ_string) {
     catch (runtime_error& rte) {                //Catch thrown exception
         return rte.what();                      //Return error message
     }
-
-
-    //vector<string> equ_vec = tokenize_equation(equ_string);
-    //string result = evaluate_equation(equ_vec);
-    //return result;
 }
