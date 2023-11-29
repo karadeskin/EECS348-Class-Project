@@ -1,3 +1,6 @@
+#ifndef __CALC_HTML_TEMPLATING_HPP__
+#define __CALC_HTML_TEMPLATING_HPP__
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -17,7 +20,7 @@ public:
             std::string fileContent((std::istreambuf_iterator<char>(fileStream)), std::istreambuf_iterator<char>());
             // parse the file content and store in memory
             inja::Template contentTemplate = env.parse(fileContent);
-            html[fileName] = contentTemplate;
+            html[fileName] = fileContent;
             fileStream.close(); // close file
         } else {
             std::cerr << "Unable to open file: " << fileName << std::endl;
@@ -26,7 +29,7 @@ public:
 
     std::string render(const std::string &fileName, const nlohmann::json &data) {
         // check if the template exists
-        if (templates.find(fileName) == templates.end()) {
+        if (html.find(fileName) == html.end()) {
             return "Template not found";
         }
 
@@ -35,9 +38,28 @@ public:
 
         try {
             // render the template with the provided data
-            return env.render(templateRef, data);
+            return env.render(html[fileName], data);
+        } catch (const inja::RenderError &e) {
+            return "Render error: " + std::string(e.what());
+        }
+    }
+
+        std::string render(const std::string &fileName) {
+        // check if the template exists
+        if (html.find(fileName) == html.end()) {
+            return "Template not found";
+        }
+
+        // get the template from memory
+        inja::Template& templateRef = templates[fileName];
+
+        try {
+            // render the template with the provided data
+            return env.render(html[fileName], nlohmann::json());
         } catch (const inja::RenderError &e) {
             return "Render error: " + std::string(e.what());
         }
     }
 };
+
+#endif // __CALC_HTML_TEMPLATING_HPP__
