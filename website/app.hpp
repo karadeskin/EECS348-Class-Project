@@ -8,26 +8,33 @@
 #include <inja/inja.hpp>
 #include <httplib.h>
 
-#include "services/example_service.hpp"
+#include "html_template.hpp"
+#include "services/auth_service.hpp"
 
 class App {
 private:
-    nlohmann::json _config {};
     httplib::Server _server {};
-    inja::Environment _inja {};
-    ExampleService &_example;
+    nlohmann::json _config {};
+    Templating &_inja;
+    AuthService &_auth;
 
     // responds to the endpoint: /
     void get_index(const httplib::Request &req, httplib::Response &res);
 
-    // responds to the endpoint: /user
+    // responds to the endpoint: /error
+    void get_error(const httplib::Request &req, httplib::Response &res);
+
+    // responds to the endpoint: /user?name='username'
     void get_users_page(const httplib::Request &req, httplib::Response &res);
 
-    // responds to the endpoint: /user?id=`id`
-    void get_user_at_id(const httplib::Request &req, httplib::Response &res);
+    // responds to the endpoint: /signup
+    void get_signup(const httplib::Request &req, httplib::Response &res);
+
+    // responds to the endpoint: /create?name=`username`&password=`password`
+    void create_user(const httplib::Request &req, httplib::Response &res);
 public:
     // links together all of the other pieces of the web app
-    App(const nlohmann::json &config, ExampleService &example);
+    App(const nlohmann::json &config, Templating &inja, AuthService &auth);
 
     // listen for connections and respond.
     // caution: this blocks the thread it's called on

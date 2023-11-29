@@ -1,8 +1,12 @@
 #ifndef __CALC_SQL_INTERFACE_HPP__
 #define __CALC_SQL_INTERFACE_HPP__
 
+#include <vector>
+
 #include <memory>
 #include <sqlite/sqlite3.h>
+
+#include "../user.hpp"
 
 struct SQLDeleter {
     void operator()(sqlite3 *db) noexcept { sqlite3_close_v2(db); }
@@ -17,10 +21,12 @@ protected:
     char _buffer[1024];
     int _error_code = 0;
     const char *_error_string = nullptr;
+    const char *_extended_error = nullptr;
     SQLError() {}
     SQLError(const SQLiteHandle &db) {
         _error_code = sqlite3_errcode(db.get());
         _error_string = sqlite3_errstr(_error_code);
+        _extended_error = sqlite3_errstr(sqlite3_extended_errcode(db.get()));
     }
 public:
     char *what() {
@@ -72,23 +78,6 @@ class SQLiteDatabase {
 private:
     SQLiteHandle _db {};
     char _stmt_buffer[4096];
-
-    SQLiteStatementHandle prepare_sql_statement(const char *statement, va_list argp) {
-        if (!_db) {
-            throw SQLNotAttachedError();
-        }
-
-        int rc = 0;
-        sqlite3_stmt *compiled_stmt = nullptr;
-        int bytes_written = std::vsnprintf(_stmt_buffer, sizeof(_stmt_buffer), statement, argp);
-
-        rc = sqlite3_prepare_v2(_db.get(), _stmt_buffer, bytes_written, &compiled_stmt, nullptr);
-        if (rc != SQLITE_OK) {
-            throw SQLPrepareError(_db, _stmt_buffer);
-        }
-
-        return SQLiteStatementHandle(compiled_stmt);
-    }
 public:
     SQLiteDatabase() {}
 
@@ -119,6 +108,32 @@ public:
         _db.reset();
     }
 
+    SQLiteHandle& handle() {
+        return _db;
+    }
+
+    SQLiteStatementHandle prepare_sql_statement(const char *statement, ...) {
+        if (!_db) {
+            throw SQLNotAttachedError();
+        }
+
+        va_list argp;
+        va_start(argp, statement);
+
+        int rc = 0;
+        sqlite3_stmt *compiled_stmt = nullptr;
+        int bytes_written = std::vsnprintf(_stmt_buffer, sizeof(_stmt_buffer), statement, argp);
+
+        va_end(argp);
+
+        rc = sqlite3_prepare_v2(_db.get(), _stmt_buffer, bytes_written, &compiled_stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            throw SQLPrepareError(_db, _stmt_buffer);
+        }
+
+        return SQLiteStatementHandle(compiled_stmt);
+    }
+
     void execute_sql_statement(const char *statement, ...) {
         va_list argp;
         va_start(argp, statement);
@@ -137,6 +152,33 @@ public:
 
             throw SQLGenericError(_db, stmt);
         }
+    }
+
+    int select_int(const char *statement, ...) {
+        va_list argp;
+        va_start(argp, statement);
+
+        auto stmt = prepare_sql_statement(statement, argp);
+
+        va_end(argp);
+
+        int rc;
+        int id;
+        while ((rc = sqlite3_step(stmt.get())) == SQLITE_ROW) {
+            id = sqlite3_column_int(stmt.get(), 0);
+        }
+
+        if (rc != SQLITE_DONE) {
+            if (rc == SQLITE_BUSY) {
+                throw SQLBusyError(_db, stmt);
+            } else if (rc == SQLITE_CONSTRAINT) {
+                throw SQLConstraintError(_db, stmt);
+            }
+
+            throw SQLGenericError(_db, stmt);
+        }
+
+        return id;
     }
 };
 
