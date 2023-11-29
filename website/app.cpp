@@ -22,7 +22,7 @@ static const char *error_response =
     "</body>"
     "</html>";
 
-App::App(const nlohmann::json &config, AuthService &auth) : _config(config), _auth(auth) {
+App::App(const nlohmann::json &config, Templating &inja, AuthService &auth) : _config(config), _inja(inja), _auth(auth) {
     _server.Get("/", [&](const httplib::Request &req, httplib::Response &res) {
         std::cout << "GET: /\n";
         get_index(req, res);
@@ -71,7 +71,7 @@ App::App(const nlohmann::json &config, AuthService &auth) : _config(config), _au
 }
 
 void App::get_index(const httplib::Request &req, httplib::Response &res) {
-    res.set_content("<index goes here>", "text/plain");
+    res.set_content(_inja.render("index.html"), "text/html");
 }
 
 void App::get_error(const httplib::Request &req, httplib::Response &res) {

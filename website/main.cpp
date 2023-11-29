@@ -6,6 +6,7 @@
 #include <sqlite/sqlite3.h>
 #include <httplib.h>
 
+#include "html_template.hpp"
 #include "services/auth_service.hpp"
 #include "app.hpp"
 #include "db/sql_user_dao.hpp"
@@ -38,11 +39,19 @@ int main(int argc, char *argv[]) {
         auto history_dao = std::make_shared<SQLHistoryDatabaseAccessObject>(config);
         auto script_dao = std::make_shared<SQLScriptDatabaseAccessObject>(config);
 
+        // set up inja templates
+        auto template_engine = Templating();
+        for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::current_path())) {
+            if (std::filesystem::is_regular_file(entry) && entry.path().extension() == ".html") {
+                template_engine.load(entry.path().filename());
+            }
+        }
+
         // instantiate an example service
         AuthService auth(user_dao);
 
         // pass the service to our app and begin running
-        auto app = App(config, auth);
+        auto app = App(config, template_engine, auth);
         app.run();
     } catch (std::exception &e) {
         std::cerr << e.what() << '\n';
