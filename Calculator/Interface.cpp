@@ -28,7 +28,10 @@ string Interface::solve_equation(string equ_string) {
         vector<string> equ_vec = tokenize_equation(equ_string); //Tokenize input equation
         return evaluate_equation(equ_vec);                      //Evaluate tokenized equation, return result
     }
-    catch (runtime_error& rte) {                //Catch thrown exception
-        return rte.what();                      //Return error message
+    catch (runtime_error& rte) {                //Catch thrown  runtime error
+        return rte.what();                      //Return specific error message
+    }
+    catch (...) {                               //Catch all other errors
+        return "ERROR: Unkown error.";          //Return generic error message
     }
 }
