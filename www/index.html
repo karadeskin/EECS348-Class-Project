@@ -6,22 +6,76 @@ Calculator
 
 {% block content %}
 <div class="calculator">
-    <div class="display" id="display"><% displayValue %></div>
+    <div class="display" id="display">0</div>
     <div>
         <!-- buttons for calculator -->
-        <button class="button" onclick="appendToDisplay('7')">7</button>
-        <button class="button" onclick="appendToDisplay('8')">8</button>
-        <button class="button" onclick="appendToDisplay('9')">9</button>
-        <button class="button" onclick="appendToDisplay('+')">+</button>
+        <button class="button number">7</button>
+        <button class="button number">8</button>
+        <button class="button number">9</button>
+        <button class="button operator">+</button>
     </div>
-    <!-- additional rows of buttons????? idk if this is correct -->
+    <div>
+        <button class="button number">4</button>
+        <button class="button number">5</button>
+        <button class="button number">6</button>
+        <button class="button operator">-</button>
+    </div>
+    <div>
+        <button class="button number">1</button>
+        <button class="button number">2</button>
+        <button class="button number">3</button>
+        <button class="button operator">*</button>
+    </div>
+    <div>
+        <button class="button number">0</button>
+        <button class="button operator">/</button>
+        <button class="button clear">C</button>
+        <button class="button equal">=</button>
+    </div>
 </div>
 
-<script>
-    // functions to interact with the calculator
-    function appendToDisplay(value) {
-        
+<style>
+    /* style for calculator */
+    .calculator {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        max-width: 300px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    // more functions for calculator functionality
+
+    .button {
+        padding: 20px;
+        font-size: 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #fff;
+        transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+        background-color: #e0e0e0;
+    }
+
+    .display {
+        grid-column: span 4;
+        text-align: right;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 28px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script>
+
 </script>
 {% endblock %}
+
