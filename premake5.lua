@@ -20,13 +20,13 @@ project "Calculator"
         "sqlite"
     }
 
-    filter "system:Linux"
-        links {
-            "pthread",
-            "dl"
-        }
+    -- filter "system:Linux"
+    --     links {
+    --         "pthread",
+    --         "dl"
+    --     }
 
-    filter {}
+    -- filter {}
 
     includedirs {
         "thirdparty/inja-3.4.0/",
@@ -64,13 +64,13 @@ project "Website"
         "Calculator"
     }
 
-    filter "system:Linux"
-        links {
-            "pthread",
-            "dl"
-        }
+    -- filter "system:Linux"
+    --     links {
+    --         "pthread",
+    --         "dl"
+    --     }
 
-    filter {}
+    -- filter {}
 
 
     includedirs {
