@@ -9,18 +9,16 @@
 #include <cmath>
 #include <map>
 
-vector<string> Interface::tokenize_equation(string equation) {
-    return tokenizer.tokenize(equation);                        //Tokenize equation string, return result vector
+using namespace std;
 
-    //vector<string> equ_vec = tokenizer.tokenize(equation);
-    //return equ_vec;
+vector<string> Interface::tokenize_equation(string equation) {
+    //Tokenize equation string, return result vector
+    return tokenizer.tokenize(equation);
 }
 
 string Interface::evaluate_equation(vector<string> equ) {
-    return evaluator.eval_equation(equ)[0];                 //Evaluate equation, return first (and only) string in result vector
-    
-    //string result = evaluator.eval_equation(equ)[0];
-    //return result;
+     //Evaluate equation, return first (and only) string in result vector
+    return evaluator.eval_equation(equ)[0];
 }
 
 string Interface::solve_equation(string equ_string) {
@@ -30,6 +28,9 @@ string Interface::solve_equation(string equ_string) {
     }
     catch (runtime_error& rte) {                //Catch thrown  runtime error
         return rte.what();                      //Return specific error message
+    }
+    catch (out_of_range) {
+        return "ERROR: Input out of range.";
     }
     catch (...) {                               //Catch all other errors
         return "ERROR: Unkown error.";          //Return generic error message

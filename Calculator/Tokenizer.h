@@ -7,19 +7,13 @@
 #include <string>
 #include <cmath>
 
-using namespace std;
-
 class Tokenizer {
 public:
-    vector<string> tokenize(string equ_str);
-
+    std::vector<std::string> tokenize(std::string equ_str);
 private:
-    bool char_is_num(const char c);
-
-    vector<string> str_to_strvec(string &equ_str);
-
-    string remove_spaces(string &old_str);
-
+    bool char_is_num(char c);
+    std::vector<std::string> str_to_strvec(std::string &equ_str);
+    std::string remove_spaces(std::string &old_str);
 };
 
 #endif

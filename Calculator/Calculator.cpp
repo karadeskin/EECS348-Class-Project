@@ -11,8 +11,16 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
 	Interface interface;
+
+    if (argc == 2) {
+        string equ_str = argv[1];
+        auto result = interface.solve_equation(equ_str);
+        std::cout << result << '\n';
+        return std::stoi(result);
+    }
+
     while (1) {
         string equ_str;                    //Initialize equation variables, and take input of equation
         cout << "Enter equation: ";

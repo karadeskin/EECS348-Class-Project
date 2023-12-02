@@ -7,24 +7,22 @@
 #include <string>
 #include <cmath>
 
-using namespace std;
-
 class Evaluator {
 public:
-    vector<string> eval_equation(vector<string> equ_vec);
+    std::vector<std::string> eval_equation(std::vector<std::string> equ_vec);
 
 private:
-    void replace_sub_equ(vector<string> &equ_vec, int first_index, int length, string result);
+    void replace_sub_equ(std::vector<std::string> &equ_vec, int first_index, int length, std::string result);
 
-    vector<string> make_sub_vec(vector<string> &equ_vec, int left_index, int right_index);
+    std::vector<std::string> make_sub_vec(std::vector<std::string> &equ_vec, int left_index, int right_index);
 
-    void paren_calc(vector<string> &equ_vec);
+    void paren_calc(std::vector<std::string> &equ_vec);
 
-    void exp_calc(vector<string> &equ_vec);
+    void exp_calc(std::vector<std::string> &equ_vec);
 
-    void mult_div_mod_calc(vector<string> &equ_vec);
+    void mult_div_mod_calc(std::vector<std::string> &equ_vec);
 
-    void add_sub_calc(vector<string> &equ_vec);
+    void add_sub_calc(std::vector<std::string> &equ_vec);
 
 };
 

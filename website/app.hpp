@@ -8,15 +8,16 @@
 #include <inja/inja.hpp>
 #include <httplib.h>
 
+#include <Interface.h>
+
 #include "html_template.hpp"
 #include "services/auth_service.hpp"
 
 class App {
 private:
+    Interface _calc;
     httplib::Server _server {};
     nlohmann::json _config {};
-    Templating &_inja;
-    AuthService &_auth;
 
     // responds to the endpoint: /
     void get_index(const httplib::Request &req, httplib::Response &res);
@@ -34,7 +35,7 @@ private:
     void create_user(const httplib::Request &req, httplib::Response &res);
 public:
     // links together all of the other pieces of the web app
-    App(const nlohmann::json &config, Templating &inja, AuthService &auth);
+    App(const nlohmann::json &config);
 
     // listen for connections and respond.
     // caution: this blocks the thread it's called on

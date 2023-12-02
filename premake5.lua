@@ -9,7 +9,7 @@ workspace "CalculatorApp"
 include "thirdparty/sqlite-3.43.1"
 
 project "Calculator"
-    kind "ConsoleApp"
+    kind "StaticLib"
     language "C++"
     cppdialect "C++2a"
 
@@ -36,7 +36,9 @@ project "Calculator"
     }
 
     files {
-        "calculator/**.cpp",
+        "calculator/Evaluator.cpp",
+        "calculator/Interface.cpp",
+        "calculator/Tokenizer.cpp",
         "calculator/**.h",
         "include/**.h"
     }
@@ -56,9 +58,10 @@ project "Website"
 
     targetdir "bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
     objdir "obj/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-    
+
     links {
-        "sqlite"
+        "sqlite",
+        "Calculator"
     }
 
     filter "system:Linux"
@@ -74,7 +77,8 @@ project "Website"
         "thirdparty/inja-3.4.0/",
         "thirdparty/nlohmann-3.11.2/single_include/",
         "thirdparty/sqlite-3.43.1/",
-        "thirdparty/cpp-httplib-0.14.1"
+        "thirdparty/cpp-httplib-0.14.1",
+        "Calculator/"
     }
 
     files {

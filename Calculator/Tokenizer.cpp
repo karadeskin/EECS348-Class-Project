@@ -6,19 +6,20 @@
 #include <string>
 #include <cmath>
 
+using namespace std;
+
+const char *negative_with_no_operand = "ERROR: Negative sign is missing number.";
+
+// Call function to convert string to vector, assign result to equ_vec
 vector<string> Tokenizer::tokenize(string equ_str) {
     equ_str = remove_spaces(equ_str);
-    vector<string> equ_vec = str_to_strvec(equ_str);   //Call function to convert string to vector, assign result to equ_vec
+    vector<string> equ_vec = str_to_strvec(equ_str);
     return equ_vec;
 }
 
-bool Tokenizer::char_is_num(const char c) {        //Return true if character c is a numeral, false if not
-    if ((c >= '0') && (c <= '9')) {
-        return true;
-    }
-    else {
-        return false;
-    }
+// Return true if character c is a numeral, false if not
+bool Tokenizer::char_is_num(char c) {
+    return (c >= '0') && (c <= '9');
 }
 
 vector<string> Tokenizer::str_to_strvec(string &equ_str) {
@@ -42,19 +43,15 @@ vector<string> Tokenizer::str_to_strvec(string &equ_str) {
                     num_str = "";       //Reset num_str
                 }                                                   //If not, nothing is done.
             }
-
             else if (character == "+" || character == "*" || character == "/" || character == "%" || character == "^") {        //If the current character is a +, *, /, %, ^
-                if (i == 0 || i == (equ_str.length() - 1)) {        //If character is the first or last charcter, throw an error
-                    throw(runtime_error("ERROR: Operator is missing an operand."));
-                }
-                else if ((char_is_num(equ_str[i - 1]) == true || equ_str[i - 1] == ')') && (char_is_num(equ_str[i + 1]) == true || equ_str[i + 1] == '-' || equ_str[i + 1] == '(')) {
+                if ((i > 0 && i < equ_str.length()) && (char_is_num(equ_str[i - 1]) == true || equ_str[i - 1] == ')')
+                    && (char_is_num(equ_str[i + 1]) == true || equ_str[i + 1] == '-' || equ_str[i + 1] == '(')) {
                     equ_vec.push_back(character);       //If current character is preceded by number or close paren, and followed by number, minus, or open paren, add character to vector
                 }
                 else {                                              //character not preceded and followed by allowed characters
                     throw(runtime_error("ERROR: Operator is missing an operand."));   //throw an error
                 }
             }
-
             else if (character == "-") {                            //Current character is a -
                 if (i == 0) {                                       //Character is first in string so character is a negative sign
                     if (i == equ_str.length() - 1) {                //Character is at end of string
@@ -104,7 +101,8 @@ vector<string> Tokenizer::str_to_strvec(string &equ_str) {
                 else if (i == equ_str.length() - 1) {           //If open paren is the last character
                     throw(runtime_error("ERROR: Mismatched parentheses."));    //It is not followed by a close paren, throw error
                 }
-                else if ((char_is_num(equ_str[i - 1]) == false && equ_str[i - 1] != ')') && (char_is_num(equ_str[i + 1]) == true || equ_str[i + 1] == '-' || equ_str[i + 1] == '(' || equ_str[i + 1] == ')')) {
+                else if ((char_is_num(equ_str[i - 1]) == false && equ_str[i - 1] != ')')
+                    && (char_is_num(equ_str[i + 1]) == true || equ_str[i + 1] == '-' || equ_str[i + 1] == '(' || equ_str[i + 1] == ')')) {
                     equ_vec.push_back(character);   //If character is preceded by something other than a number or close paren, and is followed by a number, minus, or open or close paren, add to vector
                 }
                 else {                              //Character is not preceded and followed by allowed characters

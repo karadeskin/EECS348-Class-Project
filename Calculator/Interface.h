@@ -1,27 +1,21 @@
-#ifndef INTERFACE_H
-#define INTERFACE_H
+#ifndef __CALC_INTERFACE_H__
+#define __CALC_INTERFACE_H__
 
-#include <iostream>
-#include <vector>
-#include <iterator>
 #include <string>
-#include <cmath>
-#include <map>
+#include <vector>
+
 #include "Tokenizer.h"
 #include "Evaluator.h"
 
-using namespace std;
-
 class Interface {
-
 public:
-    string solve_equation(string);
-
+    std::string solve_equation(std::string);
 private:
     Tokenizer tokenizer;
     Evaluator evaluator;
-    vector<string> tokenize_equation(string);
-    string evaluate_equation(vector<string>);
+
+    std::vector<std::string> tokenize_equation(std::string);
+    std::string evaluate_equation(std::vector<std::string>);
 };
 
-#endif
+#endif // __CALC_INTERFACE_H__

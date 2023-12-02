@@ -30,6 +30,7 @@
         })
         .then((response) => response.text())
         .then((text) => {
+            expression = '';
             document.getElementById('display').innerText = text;
         })
         .catch(error => {

@@ -6,12 +6,15 @@
 #include <string>
 #include <cmath>
 
+using namespace std;
+
 vector<string> Evaluator::eval_equation(vector<string> equ_vec) {
     paren_calc(equ_vec);                        // Pass inputted equation vector to begin evaluation process
     return equ_vec;                            // Return the equation vector
 }
 
 void Evaluator::replace_sub_equ(vector<string> &equ_vec, int first_index, int length, string result) {
+    // could use: equ_vec.erase(equ_vec.begin() + first_index, equ_vec.begin() + first_index + (length - 1));
     for (int i = first_index; i <= first_index + (length-1); i++) {     //Remove sub-equation from equation vector
         equ_vec.erase(equ_vec.begin() + first_index);
     }
