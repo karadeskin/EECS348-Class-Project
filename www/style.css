@@ -9,6 +9,14 @@ p {
     color: rgb(100, 100, 100);
 }
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 /* style for calculator */
 .calculator {
     display: grid;

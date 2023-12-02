@@ -2,8 +2,6 @@
 #include <thread>
 
 #include <nlohmann/json.hpp>
-#include <inja/inja.hpp>
-#include <sqlite/sqlite3.h>
 #include <httplib.h>
 
 #include "app.hpp"
