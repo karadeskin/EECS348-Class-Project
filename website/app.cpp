@@ -20,7 +20,7 @@ App::App(const nlohmann::json &config) : _config(config) {
 }
 
 void App::run() {
-    _server.listen("0.0.0.0", _config["port"]);
+    _server.listen(_config["ip"], _config["port"]);
 }
 
 void App::run_detach() {

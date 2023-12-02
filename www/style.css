@@ -1,13 +1,20 @@
 body {
+    text-align: center;
     font-family: Arial, Helvetica, sans-serif;
+    margin: auto;
+    width: 35%;
+}
+
+p {
+    color: rgb(100, 100, 100);
 }
 
 /* style for calculator */
 .calculator {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr); /* Updated to 5 columns */
     gap: 10px;
-    max-width: 300px;
+    max-width: 400px; /* Adjusted max-width for additional column */
     margin: 50px auto;
     padding: 20px;
     background-color: #f0f0f0;
@@ -23,7 +30,7 @@ body {
     cursor: pointer;
     background-color: #fff;
     transition: background-color 0.3s ease;
-    width: 100%; /* Set a fixed width of 100% */
+    width: 100%;
 }
 
 .button:hover {
@@ -31,7 +38,7 @@ body {
 }
 
 .display {
-    grid-column: span 4;
+    grid-column: span 5; /* Updated to span 5 columns */
     text-align: right;
     padding: 20px;
     background-color: #fff;

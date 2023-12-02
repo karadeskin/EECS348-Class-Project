@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="style.css" />
-  <title>Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" />
+    <title>Calculator</title>
 
-  <script>
+    <script>
     let expression = '';
 
     function appendToDisplay(value) {
@@ -30,8 +31,8 @@
         })
         .then((response) => response.text())
         .then((text) => {
-            expression = '';
-            document.getElementById('display').innerText = text;
+            expression = text;
+            document.getElementById('display').innerText = expression;
         })
         .catch(error => {
             console.error('Error sending expression:', error);
@@ -56,36 +57,46 @@
             }
         }
     });
-</script>
+    </script>
 </head>
 <body>
+    <h1>WebCalc</h1>
     <div class="calculator">
         <div class="display" id="display">0</div>
         <div>
-            <!-- buttons for calculator -->
             <button class="button number" onclick="appendToDisplay('7')">7</button>
             <button class="button number" onclick="appendToDisplay('4')">4</button>
             <button class="button number" onclick="appendToDisplay('1')">1</button>
-            <button class="button operator" onclick="appendToDisplay('+')">+</button>
+            <button class="button number" onclick="appendToDisplay('0')">0</button>
         </div>
         <div>
             <button class="button number" onclick="appendToDisplay('8')">8</button>
             <button class="button number" onclick="appendToDisplay('5')">5</button>
             <button class="button number" onclick="appendToDisplay('2')">2</button>
-            <button class="button operator" onclick="appendToDisplay('-')">-</button>
+            <button class="button" onclick="appendToDisplay('(')">(</button>
+            
         </div>
         <div>
             <button class="button number" onclick="appendToDisplay('9')">9</button>
             <button class="button number" onclick="appendToDisplay('6')">6</button>
             <button class="button number" onclick="appendToDisplay('3')">3</button>
+            <button class="button" onclick="appendToDisplay(')')">)</button>
+            
+        </div>
+        <div>
+            <button class="button operator" onclick="appendToDisplay('+')">+</button>
+            <button class="button operator" onclick="appendToDisplay('-')">-</button>
+            <button class="button operator" onclick="appendToDisplay('/')">/</button>
             <button class="button operator" onclick="appendToDisplay('*')">*</button>
         </div>
         <div>
-            <button class="button number" onclick="appendToDisplay('0')">0</button>
-            <button class="button operator" onclick="appendToDisplay('/')">/</button>
+            <button class="button" onclick="appendToDisplay('%')">%</button>
+            <button class="button" onclick="appendToDisplay('^')">^</button>
             <button class="button clear" onclick="clearDisplay()">C</button>
             <button class="button equal" onclick="sendExpression()">=</button>
         </div>
     </div>
+    <p>made for EECS 348 by: Harlan Williams, Jacob Kice, Nora Manolescu, Kara Deskin, Gaby Kill, and Teerapat Saengsubin</p>
+    <a href="about.html">About</a>
 </body>
 </html>
