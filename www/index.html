@@ -44,11 +44,13 @@
         if (keyPressed === 'Backspace') {
             expression = expression.slice(0, -1);
             document.getElementById('display').innerText = expression || '0';
+        } else if (keyPressed === 'Escape') {
+            clearDisplay();
         } else if (keyPressed === 'Enter' || keyPressed === '=') {
             sendExpression();
         } else {
             const isNumber = /[0-9]/.test(keyPressed);
-            const isOperator = /[\+\-\*\/\%\^]/.test(keyPressed);
+            const isOperator = /[\(\)\+\-\*\/\%\^]/.test(keyPressed);
             if (isNumber || isOperator) {
                 appendToDisplay(keyPressed);
             }

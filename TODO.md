@@ -1,5 +1,8 @@
 ## High Priority
 
+- Add Modulus, Paren, and Exponentiation operators to calc frontend
+
+
 - Class to handle Inja Templating
   - `load` - Load and store files in the class
   - `render` - Render an HTML page by passing data in a JSON

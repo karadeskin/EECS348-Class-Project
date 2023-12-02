@@ -46,6 +46,7 @@ void Evaluator::paren_calc(vector<string> &equ_vec) {
                     found_right_paren = true;       //If so, update right_paren tracker
                     if (left_paren_index + 1 == i) {        //If parentheses are empty - have nothing between them
                         replace_sub_equ(equ_vec, left_paren_index, 2, "0"); //replace them with a zero
+                        break;
                     }
                     else {                              //If parentheses are not empty
                         sub_vec = make_sub_vec(equ_vec, left_paren_index + 1, i - 1);   //Make sub-vector from the contents of parentheses
