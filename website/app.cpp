@@ -23,9 +23,15 @@ static const char *error_response =
     "</html>";
 
 App::App(const nlohmann::json &config, Templating &inja, AuthService &auth) : _config(config), _inja(inja), _auth(auth) {
+    _server.set_mount_point("/", ".");
     _server.Get("/", [&](const httplib::Request &req, httplib::Response &res) {
         std::cout << "GET: /\n";
         get_index(req, res);
+    });
+
+    _server.Post("/", [&](const httplib::Request &req, httplib::Response &res) {
+        std::cout << "POST: /\n" << req.body << '\n';
+        res.set_content("bro idk...", "text/plain");
     });
 
     _server.Get("/error", [&](const httplib::Request &req, httplib::Response &res) {

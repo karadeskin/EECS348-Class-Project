@@ -1,81 +1,88 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css" />
+  <title>Calculator</title>
 
-{% block title %}
-Calculator
-{% endblock %}
+  <script>
+    let expression = '';
 
-{% block content %}
-<div class="calculator">
-    <div class="display" id="display">0</div>
-    <div>
-        <!-- buttons for calculator -->
-        <button class="button number">7</button>
-        <button class="button number">8</button>
-        <button class="button number">9</button>
-        <button class="button operator">+</button>
-    </div>
-    <div>
-        <button class="button number">4</button>
-        <button class="button number">5</button>
-        <button class="button number">6</button>
-        <button class="button operator">-</button>
-    </div>
-    <div>
-        <button class="button number">1</button>
-        <button class="button number">2</button>
-        <button class="button number">3</button>
-        <button class="button operator">*</button>
-    </div>
-    <div>
-        <button class="button number">0</button>
-        <button class="button operator">/</button>
-        <button class="button clear">C</button>
-        <button class="button equal">=</button>
-    </div>
-</div>
-
-<style>
-    /* style for calculator */
-    .calculator {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        max-width: 300px;
-        margin: 50px auto;
-        padding: 20px;
-        background-color: #f0f0f0;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    function appendToDisplay(value) {
+        expression += value;
+        document.getElementById('display').innerText = expression;
     }
 
-    .button {
-        padding: 20px;
-        font-size: 24px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        background-color: #fff;
-        transition: background-color 0.3s ease;
+    function clearDisplay() {
+        expression = '';
+        document.getElementById('display').innerText = '0';
     }
 
-    .button:hover {
-        background-color: #e0e0e0;
+    function sendExpression() {
+        if (expression.trim() === '') {
+            return;
+        }
+
+        const endpointURL = '/';
+        fetch(endpointURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ expression: expression }),
+        })
+        .then((response) => response.text())
+        .then((text) => {
+            document.getElementById('display').innerText = text;
+        })
+        .catch(error => {
+            console.error('Error sending expression:', error);
+        });
     }
 
-    .display {
-        grid-column: span 4;
-        text-align: right;
-        padding: 20px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 28px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-</style>
+    document.addEventListener('keydown', function (event) {
+        const keyPressed = event.key;
 
-<script>
-
+        if (keyPressed === 'Backspace') {
+            expression = expression.slice(0, -1);
+            document.getElementById('display').innerText = expression || '0';
+        } else if (keyPressed === 'Enter' || keyPressed === '=') {
+            sendExpression();
+        } else {
+            const isNumber = /[0-9]/.test(keyPressed);
+            const isOperator = /[\+\-\*\/\%\^]/.test(keyPressed);
+            if (isNumber || isOperator) {
+                appendToDisplay(keyPressed);
+            }
+        }
+    });
 </script>
-{% endblock %}
-
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div>
+            <!-- buttons for calculator -->
+            <button class="button number" onclick="appendToDisplay('7')">7</button>
+            <button class="button number" onclick="appendToDisplay('4')">4</button>
+            <button class="button number" onclick="appendToDisplay('1')">1</button>
+            <button class="button operator" onclick="appendToDisplay('+')">+</button>
+        </div>
+        <div>
+            <button class="button number" onclick="appendToDisplay('8')">8</button>
+            <button class="button number" onclick="appendToDisplay('5')">5</button>
+            <button class="button number" onclick="appendToDisplay('2')">2</button>
+            <button class="button operator" onclick="appendToDisplay('-')">-</button>
+        </div>
+        <div>
+            <button class="button number" onclick="appendToDisplay('9')">9</button>
+            <button class="button number" onclick="appendToDisplay('6')">6</button>
+            <button class="button number" onclick="appendToDisplay('3')">3</button>
+            <button class="button operator" onclick="appendToDisplay('*')">*</button>
+        </div>
+        <div>
+            <button class="button number" onclick="appendToDisplay('0')">0</button>
+            <button class="button operator" onclick="appendToDisplay('/')">/</button>
+            <button class="button clear" onclick="clearDisplay()">C</button>
+            <button class="button equal" onclick="sendExpression()">=</button>
+        </div>
+    </div>
+</body>
+</html>
