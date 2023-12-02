@@ -12,3 +12,23 @@ Building configurations...
 Running action 'gmake'...
 Done (80ms).
 ```
+
+Now, to compile the project, run `make`. The expected output is:
+```
+$ make
+
+==== Building sqlite (debug) ====
+==== Building Calculator (debug) ====
+==== Building Website (debug) ====
+```
+
+Next, change to the directory for the website by running `cd www`. 
+
+In this directory, now run `./Website`.
+
+Open your browser of choice and navigate to the following IP address: `137.184.123.158:3000`.
+
+You should now see the web calculator application on the screen of your device.
+
+
+
