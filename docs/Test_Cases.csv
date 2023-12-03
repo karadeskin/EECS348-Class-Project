@@ -1,0 +1,43 @@
+Identifier,Description,Input,Expected Output,Standalone Actual Output,Standalone Result (Pass/Fail),Website Actual Output,Website Result (Pass/Fail)
+A.1,Addition,1+7,8,8,Pass,8,Pass
+A.2,Negative Addition,-4+-3,-7,-7,Pass,-7,Pass
+A.3,"Negation of Parentheses, Modulo",-(7+1)+(5%2),-7,-7,Pass,-7,Pass
+A.4,Exponentiation and Negative Addition,3^2+-4,5,5,Pass,5,Pass
+A.5,"Parentheses, Addition and Exponentiation with Compound Power",((12+9)+(3^(2+4))),750,750,Pass,750,Pass
+A.6,"Addition, Negation of Parentheses",3+-(2+7),-6,-6,Pass,-6,Pass
+S.1,Subtraction,21-15,6,6,Pass,6,Pass
+S.2,Negative Subtraction,-9--32,23,23,Pass,23,Pass
+S.3,Subtraction with Parentheses,7-(3-5),9,9,Pass,9,Pass
+S.4,Subtraction with Negative Zero,18--0,18,18,Pass,18,Pass
+S.5,"Negation of Zero Parentheses, Addition, Negative Modulo",-(5-5)+-7%2,1,1,Pass,1,Pass
+S.6,"Negative Exponent, Subtraction",5^-2-4,-4,-4,Pass,-4,Pass
+M.1,Multiplication,7*5,35,35,Pass,35,Pass
+M.2,Negative Multiplication,-6*4*3,-72,-72,Pass,-72,Pass
+M.3,"Order of Operations with Multiplication, Addition, and Subtraction",14+9*3-4,37,37,Pass,37,Pass
+M.4,Zero Multiplication,0*7,0,0,Pass,0,Pass
+M.5,Modulo and Multiplication,8%5*2,6,6,Pass,6,Pass
+M.6,Multiplication and Exponentiation,5*7^2,245,245,Pass,245,Pass
+D.1,Division,9/4,2,2,Pass,2,Pass
+D.2,Negative Division,-6/3,-2,-2,Pass,-2,Pass
+D.3,Extraneous Parentheses with Division and Modulo,(((15/2%3))),1,1,Pass,1,Pass
+D.4,Division and Exponentiation,30/4^2,1,1,Pass,1,Pass
+D.5,"Order of Operations with Multiplication, Division, and Addition",9+18/2*7+3,75,75,Pass,75,Pass
+D.6,Modulo and Division,9%7/3,0,0,Pass,0,Pass
+Z.1,Division by Zero,16/0,ERROR: Cannot divide by zero.,ERROR: Cannot divide by zero.,Pass,ERROR: Cannot divide by zero.,Pass
+Z.2,Modulo by Zero,32%0,ERROR: Cannot divide by zero.,ERROR: Cannot divide by zero.,Pass,ERROR: Cannot divide by zero.,Pass
+Z.3,Exponentiation with Zero Power,6^0,1,1,Pass,1,Pass
+G.1,Empty Parentheses,()+7,7,7,Pass,7,Pass
+G.2,Mismatched Parentheses,(3+7,ERROR: Mismatched Parentheses.,ERROR: Mismatched Parentheses.,Pass,ERROR: Mismatched Parentheses.,Pass
+G.3,Missing Operator before Parentheses,3(4+9),ERROR: Missing operator or operand.,ERROR: Missing operator or operand.,Pass,ERROR: Missing operator or operand.,Pass
+G.4,Missing Operand at Beginning of Input,+5*7,ERROR: Operator is missing an operand.,ERROR: Operator is missing an operand.,Pass,ERROR: Operator is missing an operand.,Pass
+G.5,Missing Operand after Open Parenthese,(*4-9),ERROR: Operator is missing an operand.,ERROR: Operator is missing an operand.,Pass,ERROR: Operator is missing an operand.,Pass
+G.6,Missing Operand between Operators,1+/7,ERROR: Operator is missing an operand.,ERROR: Operator is missing an operand.,Pass,ERROR: Operator is missing an operand.,Pass
+G.7,Missing Operand before Close Parenthese,(7*3-),ERROR: Minus operator is missing an operand.,ERROR: Minus operator is missing an operand.,Pass,ERROR: Minus operator is missing an operand.,Pass
+G.8,Missing Operand at End of Input,3*4-,ERROR Minus operator is missing an operand.,ERROR Minus operator is missing an operand.,Pass,ERROR Minus operator is missing an operand.,Pass
+G.9,Missing Operator after Parentheses,(9*3)7,ERROR: Missing operator or operand.,ERROR: Missing operator or operand.,Pass,ERROR: Missing operator or operand.,Pass
+G.10,Invalid Character with Letter,5a+7,ERROR: Unrecognized character in input.,ERROR: Unrecognized character in input.,Pass,N/A,N/A
+G.11,Invalid Character with Symbol,3$9,ERROR: Unrecognized character in input.,ERROR: Unrecognized character in input.,Pass,N/A,N/A
+G.12,Extreme Positive Result,10^10,10000000000,-2147483648,Fail,-2147483648,Fail
+G.13,Extreme Negative Result,-99999*99999,-9999800001,-1409865409,Fail,-1409865409,Fail
+G.14,Extreme Input Value,9999999999+1,10000000000,ERROR: Input out of range,Fail,ERROR: Input out of range,Fail
+G.15,Empty input,,0,0,Pass,0,Pass
