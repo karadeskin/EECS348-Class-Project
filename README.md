@@ -10,20 +10,27 @@ The app is currently hosted at http://137.184.123.158:3000/
 
 To build the project for yourself, run the associated build script for the operating system you are using.
 
-For example, using macOS, run `./macos-build.sh`, where the expected output is:
+If you are using Windows, run `./windows-build.sh`.
+
+If you are using macOS, run `./macos-build.sh`.
+
+If you are using Linux, run `./linux-build.sh`.
+
+The expected output should look something like:
 ```
-$ ./macos-build.sh
+$ ./linux-build.sh
 
 Building configurations...
 Running action 'gmake'...
 Done (80ms).
 ```
 
-Now, to compile the project, run `make`. The expected output is:
+If you are using Windows, a `.sln` file should be outputted. Open this file using Visual Studio and build it from there.
+
+If you are using Linux or macOS, now, to compile the project, run `make`. The expected output is:
 ```
 $ make
 
-==== Building sqlite (debug) ====
 ==== Building Calculator (debug) ====
 ==== Building Website (debug) ====
 ```
