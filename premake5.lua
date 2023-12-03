@@ -20,13 +20,13 @@ project "Calculator"
         "sqlite"
     }
 
-    -- filter "system:Linux"
-    --     links {
-    --         "pthread",
-    --         "dl"
-    --     }
+    filter "system:Linux"
+        links {
+            "pthread",
+            "dl"
+        }
 
-    -- filter {}
+    filter {}
 
     includedirs {
         "thirdparty/inja-3.4.0/",
@@ -40,7 +40,6 @@ project "Calculator"
         "calculator/Interface.cpp",
         "calculator/Tokenizer.cpp",
         "calculator/**.h",
-        "include/**.h"
     }
 
     filter "configurations:Debug*"
@@ -64,13 +63,13 @@ project "Website"
         "Calculator"
     }
 
-    -- filter "system:Linux"
-    --     links {
-    --         "pthread",
-    --         "dl"
-    --     }
+    filter "system:Linux"
+        links {
+            "pthread",
+            "dl"
+        }
 
-    -- filter {}
+    filter {}
 
 
     includedirs {
@@ -78,7 +77,7 @@ project "Website"
         "thirdparty/nlohmann-3.11.2/single_include/",
         "thirdparty/sqlite-3.43.1/",
         "thirdparty/cpp-httplib-0.14.1",
-        "Calculator/"
+        "calculator/"
     }
 
     files {

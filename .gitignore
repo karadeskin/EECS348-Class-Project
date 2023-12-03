@@ -50,3 +50,5 @@ Makefile
 
 # ignore our db
 *.sqlite3
+
+www/Website
