@@ -18,18 +18,17 @@ int main(int argc, char *argv[]) {
         string equ_str = argv[1];
         auto result = interface.solve_equation(equ_str);
         std::cout << result << '\n';
-        return std::stoi(result);
-    }
+    } else {
+        while (1) {
+            string equ_str;                    //Initialize equation variables, and take input of equation
+            cout << "Enter equation: ";
+            getline(cin, equ_str);
+            if (equ_str.length() == 0 || equ_str == "xxxx") {
+                break;
+            }
 
-    while (1) {
-        string equ_str;                    //Initialize equation variables, and take input of equation
-        cout << "Enter equation: ";
-        getline(cin, equ_str);
-        if (equ_str == "xxxx") {
-            break;
+            cout << interface.solve_equation(equ_str) << '\n';
         }
-
-        cout << interface.solve_equation(equ_str) << '\n';
     }
     return 0;
 }

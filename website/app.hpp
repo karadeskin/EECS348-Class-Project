@@ -1,17 +1,10 @@
 #ifndef __CALC_APP_HPP__
 #define __CALC_APP_HPP__
 
-#include <iostream>
-#include <thread>
-
 #include <nlohmann/json.hpp>
-#include <inja/inja.hpp>
 #include <httplib.h>
 
 #include <Interface.h>
-
-#include "html_template.hpp"
-#include "services/auth_service.hpp"
 
 class App {
 private:
