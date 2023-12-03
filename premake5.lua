@@ -46,6 +46,49 @@ project "Calculator"
         optimize "On"
 
 
+project "CalculatorStandalone"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++2a"
+
+    targetdir "bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+    objdir "obj/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+    links {
+        "Calculator"
+    }
+
+    filter "system:Linux"
+        links {
+            "pthread",
+            "dl"
+        }
+
+    filter {}
+
+
+    includedirs {
+        "thirdparty/nlohmann-3.11.2/single_include/",
+        "thirdparty/cpp-httplib-0.14.1",
+        "calculator/"
+    }
+
+    files {
+        "calculator/Calculator.cpp",
+    }
+
+    postbuildcommands {
+        "cp ./bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name} ./tests/%{prj.name}"
+    }
+
+    filter "configurations:Debug*"
+        defines { "DEBUG" }
+        symbols "On"
+
+    filter "configurations:Release*"
+        optimize "On"
+
+
 project "Website"
     kind "ConsoleApp"
     language "C++"
