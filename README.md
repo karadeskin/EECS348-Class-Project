@@ -47,3 +47,9 @@ You should now see the web calculator application on the screen of your device.
 
 There is a Python script to run a suite of test cases in the `tests/` folder. Running this will require the `requests` library, and if running the project from your own machine, you will need to change the `WEB_URL` constant in the script to the URL of your machine or the server you are running the project on.
 
+Navigate to the `tests/` directory and run
+```
+$ python3 tests.py
+```
+to run the automated tests on the test cases in `test_cases.csv`.
+
