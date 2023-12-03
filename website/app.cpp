@@ -1,11 +1,6 @@
 #include <iostream>
 #include <thread>
 
-#include <nlohmann/json.hpp>
-#include <httplib.h>
-
-#include <Interface.h>
-
 #include "app.hpp"
 
 App::App(const nlohmann::json &config) : _config(config) {
