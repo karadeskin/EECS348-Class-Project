@@ -2,6 +2,8 @@
 
 [![C/C++ CI](https://github.com/kmdeskin/EECS348-Class-Project/actions/workflows/compiles.yml/badge.svg)](https://github.com/kmdeskin/EECS348-Class-Project/actions/workflows/compiles.yml)
 
+## Setting up the project
+
 This is a repository for our class project done for EECS348 Software Engineering I at KU for the Fall 2023 semester.
 
 The app is currently hosted at http://137.184.123.158:3000/
@@ -34,5 +36,7 @@ Open your browser of choice and navigate to the following IP address: `127.0.0.1
 
 You should now see the web calculator application on the screen of your device.
 
+## Testing the project
 
+There is a Python script to run a suite of test cases in the `tests/` folder. Running this will require the `requests` library, and if running the project from your own machine, you will need to change the `WEB_URL` constant in the script to the URL of your machine or the server you are running the project on.
 
