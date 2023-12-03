@@ -8,7 +8,7 @@ if __name__ == '__main__':
     with open('test_cases.csv') as tests:
         csvfile = csv.reader(tests)
         for row in csvfile:
-            result = subprocess.run(f'./CalculatorStandalone "{row[0]}"', shell=True, stdout=subprocess.PIPE, text=True)
+            result = subprocess.run(f"./CalculatorStandalone '{row[0]}'", shell=True, stdout=subprocess.PIPE, text=True)
             if result.stdout.strip() != row[1].strip():
                 print(f'failed test {row[0]}: expected {row[1]}; got {result.stdout.strip()}')
 
