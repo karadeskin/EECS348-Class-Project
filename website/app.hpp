@@ -11,21 +11,6 @@ private:
     Interface _calc;
     httplib::Server _server {};
     nlohmann::json _config {};
-
-    // responds to the endpoint: /
-    void get_index(const httplib::Request &req, httplib::Response &res);
-
-    // responds to the endpoint: /error
-    void get_error(const httplib::Request &req, httplib::Response &res);
-
-    // responds to the endpoint: /user?name='username'
-    void get_users_page(const httplib::Request &req, httplib::Response &res);
-
-    // responds to the endpoint: /signup
-    void get_signup(const httplib::Request &req, httplib::Response &res);
-
-    // responds to the endpoint: /create?name=`username`&password=`password`
-    void create_user(const httplib::Request &req, httplib::Response &res);
 public:
     // links together all of the other pieces of the web app
     App(const nlohmann::json &config);
